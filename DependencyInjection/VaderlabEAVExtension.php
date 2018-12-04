@@ -6,7 +6,7 @@
  * Time: 00:37
  */
 
-namespace Vaderlab\DependencyInjection;
+namespace Vaderlab\EAV\DependencyInjection;
 
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;

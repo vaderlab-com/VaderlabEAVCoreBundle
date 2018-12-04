@@ -6,7 +6,7 @@
  * Time: 15.12
  */
 
-namespace Vaderlab;
+namespace Vaderlab\EAV;
 
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;

@@ -6,7 +6,7 @@
  * Time: 15.36
  */
 
-namespace Vaderlab\Entity;
+namespace Vaderlab\EAV\Entity;
 
 
 class Attribute

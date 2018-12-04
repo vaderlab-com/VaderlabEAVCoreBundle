@@ -6,10 +6,13 @@
  * Time: 15.34
  */
 
-namespace Vaderlab\Entity;
+namespace Vaderlab\EAV\Entity;
+
+
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Vaderlab\Repository\ModelRepository")
+ * @ORM\Entity(repositoryClass="Vaderlab\EAV\Repository\ModelRepository")
  */
 class Model
 {

@@ -6,7 +6,7 @@
  * Time: 00:34
  */
 
-namespace Vaderlab\DependencyInjection;
+namespace Vaderlab\EAV\DependencyInjection;
 
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;

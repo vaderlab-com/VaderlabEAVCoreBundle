@@ -6,7 +6,7 @@
  * Time: 17.28
  */
 
-namespace Vaderlab\Tests\Entity;
+namespace Vaderlab\EAV\Tests\Entity;
 
 
 class ModelTest
