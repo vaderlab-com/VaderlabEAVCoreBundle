@@ -9,7 +9,8 @@
 namespace Vaderlab;
 
 
-class VaderlabEAVBundle
-{
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+class VaderlabEAVBundle extends Bundle
+{
 }

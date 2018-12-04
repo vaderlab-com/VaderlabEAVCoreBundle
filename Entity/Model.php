@@ -8,11 +8,25 @@
 
 namespace Vaderlab\Entity;
 
-
+/**
+ * @ORM\Entity(repositoryClass="Vaderlab\Repository\ModelRepository")
+ */
 class Model
 {
 
     private $attributes = [];
+
+    private $createdAt;
+
+    private $updatedAt;
+
+    /**
+     * @throws \Exception
+     */
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
      * @return array
