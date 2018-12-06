@@ -38,7 +38,7 @@ abstract class AbstractValue implements ValueInterface
 
     /**
      * @var Attribute
-     * @ORM\ManyToOne( targetEntity="Attribute", fetch="LAZY", cascade={"persist"} )
+     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Entity\Attribute", fetch="LAZY", cascade={"persist"} )
      */
     protected $attribute;
 
