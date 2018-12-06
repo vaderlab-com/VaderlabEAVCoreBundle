@@ -37,6 +37,12 @@ abstract class AbstractValue implements ValueInterface
     protected $value;
 
     /**
+     * @var Attribute
+     * @ORM\ManyToOne( targetEntity="Attribute", fetch="LAZY", cascade={"persist"} )
+     */
+    protected $attribute;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -78,6 +84,25 @@ abstract class AbstractValue implements ValueInterface
     public function setModel(Model $model): ValueInterface
     {
         $this->model = $model;
+
+        return $this;
+    }
+
+    /**
+     * @return Attribute
+     */
+    public function getAttribute(): ?Attribute
+    {
+        return $this->attribute;
+    }
+
+    /**
+     * @param Attribute $attribute
+     * @return $this
+     */
+    public function setAttribute(Attribute $attribute): ValueInterface
+    {
+        $this->attribute = $attribute;
 
         return $this;
     }
