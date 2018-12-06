@@ -34,7 +34,7 @@ class Model
 
     /**
      * @var \DateTime|null
-     * @ORM\Column( name="created_at", type="datetime", nullable=false )
+     * @ORM\Column( name="updated_at", type="datetime", nullable=true )
      */
     private $updatedAt;
 
