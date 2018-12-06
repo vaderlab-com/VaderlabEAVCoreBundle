@@ -9,22 +9,62 @@
 namespace Vaderlab\EAV\Entity;
 
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="Vaderlab\EAV\Repository\AttributeRepository")
+ */
 class Attribute
 {
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
     /**
      * @var String
      */
     private $name;
 
     /**
-     * @var String
+     * @var String - string, integer, float, text, boolean, spatial ( Polygon, Polyline, etc… ), etc…
+     * @ORM\ManyToOne(  )
      */
     private $type;
 
     /**
-     * @var Model
+     * @var boolean
+     * @ORM\Column( name="nullable", type="boolean", nullable=false )
      */
-    private $model;
+    private $nullable;
+
+    /**
+     * @var boolean
+     * @ORM\Column( name="indexable", type="boolean", nullable=false )
+     */
+    private $indexable;
+
+    /**
+     * @var integer
+     * @ORM\Column( name="length", type="integer", nullable=false )
+     */
+    private $length;
+
+    /**
+     * @var ModelType
+     * @ORM\ManyToOne( targetEntity="ModelType", fetch="LAZY" )
+     */
+    private $modelType;
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     /**
      * @return string|null
@@ -52,20 +92,77 @@ class Attribute
     }
 
     /**
-     * @return Model
+     * @return ModelType
      */
-    public function getModel(): ?Model
+    public function getModelType(): ?ModelType
     {
-        return $this->model;
+        return $this->modelType;
     }
 
     /**
-     * @param Model $model
+     * @param ModelType $modelType
      * @return Attribute
      */
-    public function setModel( Model $model ): Attribute
+    public function setModel( ModelType $modelType ): Attribute
     {
-        $this->model = $model;
+        $this->modelType = $modelType;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNullable(): bool
+    {
+        return $this->nullable;
+    }
+
+    /**
+     * @param bool $nullable
+     * @return $this
+     */
+    public function setNullable(bool $nullable): Attribute
+    {
+        $this->nullable = $nullable;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIndexable(): bool
+    {
+        return $this->indexable;
+    }
+
+    /**
+     * @param bool $indexable
+     * @return $this
+     */
+    public function setIndexable(bool $indexable): Attribute
+    {
+        $this->indexable = $indexable;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLength(): int
+    {
+        return $this->length;
+    }
+
+    /**
+     * @param int $length
+     * @return $this
+     */
+    public function setLength(int $length): Attribute
+    {
+        $this->length = $length;
 
         return $this;
     }

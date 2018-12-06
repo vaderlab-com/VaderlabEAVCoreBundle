@@ -9,21 +9,57 @@
 namespace Vaderlab\EAV\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Repository\ModelRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Model
 {
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
-    private $attributes = [];
-
+    /**
+     * @var \DateTime
+     * @ORM\Column( name="created_at", type="datetime", nullable=false )
+     */
     private $createdAt;
 
+    /**
+     * @var \DateTime|null
+     * @ORM\Column( name="created_at", type="datetime", nullable=false )
+     */
     private $updatedAt;
 
     /**
+     * @var ModelType
+     * @ORM\ManyToOne( targetEntity="ModelType", inversedBy="model", fetch="EAGER", cascade={"persist", "update"} )
+     */
+    private $type;
+
+    /**
+     * @var Collection[]
+     */
+    private $values;
+
+    /**
+     * Model constructor.
+     */
+    public function __construct()
+    {
+        $this->type = new ModelType();
+        $this->values = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\PrePersist()
      * @throws \Exception
      */
     public function prePersist()
@@ -32,30 +68,51 @@ class Model
     }
 
     /**
-     * @return array
+     * @ORM\PreUpdate()
+     * @throws \Exception
      */
-    public function getAttributes(): array
+    public function preUpdate()
     {
-        return $this->attributes;
+        $this->updatedAt = new \DateTime();
     }
 
     /**
-     * @return Attribute|null
+     * @return int|null
      */
-    public function getAttribute(): ?Attribute
+    public function getId(): ?int
     {
-        return $this->attributes[0];
+        return $this->id;
     }
 
     /**
-     * @param array $attributes
-     * @return Model
+     * @return \DateTime
      */
-    public function setAttributes( array $attributes ): Model
+    public function getCreatedAt(): \DateTime
     {
+        return $this->createdAt;
+    }
 
-        $this->attributes = $attributes;
+    /**
+     * @return \DateTime|null
+     */
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updatedAt;
+    }
 
-        return $this;
+    /**
+     * @return ModelType
+     */
+    public function getType(): ?ModelType
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param ModelType $type
+     */
+    public function setType(ModelType $type): void
+    {
+        $this->type = $type;
     }
 }
