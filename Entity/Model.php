@@ -40,7 +40,7 @@ class Model
 
     /**
      * @var ModelType
-     * @ORM\ManyToOne( targetEntity="ModelType", inversedBy="model", fetch="EAGER", cascade={"persist", "update"} )
+     * @ORM\ManyToOne( targetEntity="ModelType", inversedBy="model", fetch="EAGER", cascade={"persist", "merge", "refresh"} )
      */
     private $type;
 

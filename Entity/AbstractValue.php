@@ -22,7 +22,7 @@ abstract class AbstractValue implements ValueInterface
 {
     /**
      * @var Model
-     * @ORM\ManyToOne( targetEntity="Model", fetch="EXTRA_LAZY", cascade={"persist", "update"} )
+     * @ORM\ManyToOne( targetEntity="Model", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
      */
     private $model;
 
