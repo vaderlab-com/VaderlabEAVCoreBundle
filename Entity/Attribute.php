@@ -30,7 +30,7 @@ class Attribute
 
     /**
      * @var String - string, integer, float, text, boolean, spatial ( Polygon, Polyline, etc… ), etc…
-     * @ORM\Column( name="type", type="string", length="50", nullable=false )
+     * @ORM\Column( name="type", type="string", length=50, nullable=false )
      */
     private $type;
 
