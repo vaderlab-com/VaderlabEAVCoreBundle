@@ -21,6 +21,11 @@ use Vaderlab\EAV\Entity\Model;
 abstract class AbstractValue implements ValueInterface
 {
     /**
+     * @var int
+     */
+    protected $id;
+
+    /**
      * @var Model
      * @ORM\ManyToOne( targetEntity="Model", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
      */
@@ -30,6 +35,14 @@ abstract class AbstractValue implements ValueInterface
      * @var mixed
      */
     protected $value;
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     /**
      * @return mixed

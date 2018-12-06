@@ -38,6 +38,7 @@ class ModelType
 
     /**
      * @var Collection
+     * @ORM\OneToMany( targetEntity="Attribute", mappedBy="modelType", fetch="EAGER", cascade={"remove", "persist", "merge"} )
      */
     private $attributes;
 

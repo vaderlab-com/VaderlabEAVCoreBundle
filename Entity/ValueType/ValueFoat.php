@@ -20,6 +20,13 @@ use Doctrine\ORM\Mapping as ORM;
 class ValueFoat extends AbstractValue
 {
     /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    protected $id;
+
+    /**
      * @var float
      * @ORM\Column( name="val", type="float", nullable=true )
      */
