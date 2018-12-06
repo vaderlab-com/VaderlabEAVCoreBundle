@@ -27,7 +27,7 @@ class ValueString extends AbstractValue
 
     /**
      * @var string
-     * @ORM\Column( name="val", type="string", length="2048", nullable=false )
+     * @ORM\Column( name="val", type="string", length=2048, nullable=false )
      */
     protected $value = '';
 
