@@ -106,6 +106,4 @@ abstract class AbstractValue implements ValueInterface
 
         return $this;
     }
-
-
 }

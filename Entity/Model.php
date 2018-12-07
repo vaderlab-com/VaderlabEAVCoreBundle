@@ -46,6 +46,7 @@ class Model
 
     /**
      * @var Collection[]
+     * @ORM\OneToMany( targetEntity="AbstractValue", mappedBy="model", cascade={"all"} )
      */
     private $values;
 
@@ -114,5 +115,21 @@ class Model
     public function setType(ModelType $type): void
     {
         $this->type = $type;
+    }
+
+    /**
+     * @return Collection[]
+     */
+    public function getValues(): array
+    {
+        return $this->values;
+    }
+
+    /**
+     * @param Collection[] $values
+     */
+    public function setValues(array $values): void
+    {
+        $this->values = $values;
     }
 }

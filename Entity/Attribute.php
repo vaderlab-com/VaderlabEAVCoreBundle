@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Repository\AttributeRepository")
+ * @ORM\Table(name="Attribute", uniqueConstraints={
+ *      @ORM\UniqueConstraint(name="attribute", columns={"name", "model_type_id"})
+ * })
  */
 class Attribute
 {
@@ -25,6 +28,7 @@ class Attribute
 
     /**
      * @var String
+     * @ORM\Column( name="name", type="string", length=50, nullable=false )
      */
     private $name;
 
