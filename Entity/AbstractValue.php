@@ -27,9 +27,9 @@ abstract class AbstractValue implements ValueInterface
 
     /**
      * @var Model
-     * @ORM\ManyToOne( targetEntity="Model", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
+     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Entity\Model", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
      */
-    private $model;
+    protected $model;
 
     /**
      * @var mixed

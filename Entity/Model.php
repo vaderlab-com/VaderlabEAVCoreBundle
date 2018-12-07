@@ -45,10 +45,10 @@ class Model
     private $type;
 
     /**
-     * @var Collection[]
-     * @ORM\OneToMany( targetEntity="AbstractValue", mappedBy="model", cascade={"all"} )
+     * @var Collection
+     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Entity\AbstractValue", mappedBy="model", cascade={"all"} )
      */
-    private $values;
+    protected $values;
 
     /**
      * Model constructor.
@@ -120,7 +120,7 @@ class Model
     /**
      * @return Collection[]
      */
-    public function getValues(): array
+    public function getValues(): Collection
     {
         return $this->values;
     }
@@ -128,7 +128,7 @@ class Model
     /**
      * @param Collection[] $values
      */
-    public function setValues(array $values): void
+    public function setValues(Collection $values): void
     {
         $this->values = $values;
     }
