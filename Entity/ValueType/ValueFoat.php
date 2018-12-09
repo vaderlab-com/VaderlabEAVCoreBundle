@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class ValueFoat
  * @package Vaderlab\EAV\Entity\ValueType
  * @ORM\Entity()
+ * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
 class ValueFoat extends AbstractValue
 {

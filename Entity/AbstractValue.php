@@ -28,6 +28,7 @@ abstract class AbstractValue implements ValueInterface
     /**
      * @var Model
      * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Entity\Model", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
+     * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     protected $model;
 
@@ -39,6 +40,7 @@ abstract class AbstractValue implements ValueInterface
     /**
      * @var Attribute
      * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Entity\Attribute", fetch="LAZY", cascade={"persist"} )
+     * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     protected $attribute;
 

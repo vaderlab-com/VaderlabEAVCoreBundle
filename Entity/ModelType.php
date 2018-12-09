@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Repository\ModelTypeRepository")
+ * @ORM\Cache(usage="READ_WRITE", region="model_type_region")
  */
 class ModelType
 {
@@ -38,7 +39,8 @@ class ModelType
 
     /**
      * @var Collection
-     * @ORM\OneToMany( targetEntity="Attribute", mappedBy="modelType", fetch="EAGER", cascade={"remove", "persist", "merge"} )
+     * @ORM\Cache("NONSTRICT_READ_WRITE")
+     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Entity\Attribute", mappedBy="modelType", fetch="EAGER", cascade={"remove", "persist", "merge"} )
      */
     private $attributes;
 

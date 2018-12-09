@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Repository\ModelRepository")
+ * @ORM\Cache(usage="READ_WRITE", region="model_region")
  * @ORM\HasLifecycleCallbacks()
  */
 class Model
@@ -41,12 +42,14 @@ class Model
     /**
      * @var ModelType
      * @ORM\ManyToOne( targetEntity="ModelType", inversedBy="model", fetch="EAGER", cascade={"persist", "merge", "refresh"} )
+     * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     private $type;
 
     /**
      * @var Collection
      * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Entity\AbstractValue", mappedBy="model", cascade={"all"} )
+     * @ORM\Cache("READ_WRITE")
      */
     protected $values;
 
@@ -88,7 +91,7 @@ class Model
     /**
      * @return \DateTime
      */
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
@@ -110,14 +113,6 @@ class Model
     }
 
     /**
-     * @param ModelType $type
-     */
-    public function setType(ModelType $type): void
-    {
-        $this->type = $type;
-    }
-
-    /**
      * @return Collection[]
      */
     public function getValues(): Collection
@@ -131,5 +126,10 @@ class Model
     public function setValues(Collection $values): void
     {
         $this->values = $values;
+    }
+
+    public function getValue( string $name )
+    {
+        $attributes = $this->getType()->getAttributes();
     }
 }

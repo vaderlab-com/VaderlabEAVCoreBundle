@@ -16,6 +16,7 @@ use Vaderlab\EAV\Entity\AbstractValue;
  * Class ValueInteger
  * @package Vaderlab\EAV\Entity\ValueType
  * @ORM\Entity()
+ * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
 class ValueInteger extends AbstractValue
 {

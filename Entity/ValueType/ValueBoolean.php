@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class ValueBoolean
  * @package Vaderlab\EAV\Entity\ValueType
  * @ORM\Entity()
+ * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
 class ValueBoolean extends AbstractValue
 {

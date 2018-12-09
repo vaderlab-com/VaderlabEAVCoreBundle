@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class ValueString
  * @package Vaderlab\EAV\Entity\ValueType
  * @ORM\Entity()
+ * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
 class ValueText extends AbstractValue
 {

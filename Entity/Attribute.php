@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Repository\AttributeRepository")
+ * @ORM\Cache(usage="READ_WRITE", region="attribute_region")
  * @ORM\Table(name="Attribute", uniqueConstraints={
  *      @ORM\UniqueConstraint(name="attribute", columns={"name", "model_type_id"})
  * })
@@ -59,6 +60,7 @@ class Attribute
     /**
      * @var ModelType
      * @ORM\ManyToOne( targetEntity="ModelType", fetch="LAZY" )
+     * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     private $modelType;
 
