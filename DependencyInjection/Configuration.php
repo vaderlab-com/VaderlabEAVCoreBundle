@@ -16,19 +16,18 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('vaderlab_eav');
-/*
+        $treeBuilder = new TreeBuilder('vaderlab_eav_core');
+
         $treeBuilder->getRootNode()
             ->children()
-                ->arrayNode('twitter')
+                ->arrayNode('entity')
                     ->children()
-                        ->integerNode('client_id')->end()
-                        ->scalarNode('client_secret')->end()
+                        ->arrayNode('value_types')->scalarPrototype()->end()
                     ->end()
-                ->end() // twitter
+                ->end()
             ->end()
         ;
-*/
+
         return $treeBuilder;
     }
 }
