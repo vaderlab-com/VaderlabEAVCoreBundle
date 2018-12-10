@@ -6,12 +6,12 @@
  * Time: 00:50
  */
 
-namespace Vaderlab\EAV\Tests\Unit\Entity;
+namespace Vaderlab\EAV\Core\Tests\Unit\Entity;
 
 
 use PHPUnit\Framework\TestCase;
-use Vaderlab\EAV\Entity\Model;
-use Vaderlab\EAV\Entity\ModelType;
+use Vaderlab\EAV\Core\Entity\Model;
+use Vaderlab\EAV\Core\Entity\ModelType;
 
 class ModelTest extends TestCase
 {

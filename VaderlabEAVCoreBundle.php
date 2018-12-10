@@ -6,11 +6,11 @@
  * Time: 15.12
  */
 
-namespace Vaderlab\EAV;
+namespace Vaderlab\EAV\Core;
 
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class VaderlabEAVBundle extends Bundle
+class VaderlabEAVCoreBundle extends Bundle
 {
 }

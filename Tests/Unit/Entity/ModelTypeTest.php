@@ -6,12 +6,12 @@
  * Time: 00:38
  */
 
-namespace Vaderlab\EAV\Tests\Unit\Entity;
+namespace Vaderlab\EAV\Core\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
-use Vaderlab\EAV\Entity\ModelType;
+use Vaderlab\EAV\Core\Entity\ModelType;
 
 class ModelTypeTest extends TestCase
 {

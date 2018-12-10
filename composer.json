@@ -1,5 +1,5 @@
 {
-  "name": "vaderlab/EAVBundle",
+  "name": "vaderlab/eav-core-bundle",
   "type": "symfony-bundle",
   "license": "MIT",
   "description": "Entity Attribute model integration",
@@ -18,7 +18,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Vaderlab\\EAV\\": ""
+      "Vaderlab\\EAV\\Core\\": ""
     }
   },
   "autoload-dev": {

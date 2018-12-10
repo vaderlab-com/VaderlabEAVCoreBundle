@@ -6,7 +6,7 @@
  * Time: 15.34
  */
 
-namespace Vaderlab\EAV\Entity;
+namespace Vaderlab\EAV\Core\Entity;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Vaderlab\EAV\Repository\ModelRepository")
+ * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\ModelRepository")
  * @ORM\Cache(usage="READ_WRITE", region="model_region")
  * @ORM\HasLifecycleCallbacks()
  */
@@ -48,7 +48,7 @@ class Model
 
     /**
      * @var Collection
-     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Entity\AbstractValue", mappedBy="model", cascade={"all"} )
+     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\AbstractValue", mappedBy="model", cascade={"all"} )
      * @ORM\Cache("READ_WRITE")
      */
     protected $values;

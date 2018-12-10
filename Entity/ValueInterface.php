@@ -6,7 +6,7 @@
  * Time: 17.17
  */
 
-namespace Vaderlab\EAV\Entity;
+namespace Vaderlab\EAV\Core\Entity;
 
 
 interface ValueInterface

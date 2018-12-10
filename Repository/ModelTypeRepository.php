@@ -6,7 +6,7 @@
  * Time: 01:40
  */
 
-namespace Vaderlab\EAV\Repository;
+namespace Vaderlab\EAV\Core\Repository;
 
 
 use Doctrine\ORM\EntityRepository;

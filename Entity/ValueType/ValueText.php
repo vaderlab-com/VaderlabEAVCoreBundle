@@ -6,14 +6,14 @@
  * Time: 16:52
  */
 
-namespace Vaderlab\EAV\Entity\ValueType;
+namespace Vaderlab\EAV\Core\Entity\ValueType;
 
-use Vaderlab\EAV\Entity\AbstractValue;
+use Vaderlab\EAV\Core\Entity\AbstractValue;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class ValueString
- * @package Vaderlab\EAV\Entity\ValueType
+ * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */

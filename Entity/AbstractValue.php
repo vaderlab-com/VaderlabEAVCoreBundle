@@ -6,15 +6,15 @@
  * Time: 16:33
  */
 
-namespace Vaderlab\EAV\Entity;
+namespace Vaderlab\EAV\Core\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Vaderlab\EAV\Entity\Model;
+use Vaderlab\EAV\Core\Entity\Model;
 
 /**
  * Class AbstractValue
- * @package Vaderlab\EAV\Entity\ValueType
+ * @package Vaderlab\EAV\Core\Entity\ValueType
  *
  * @ORM\MappedSuperclass()
  */
@@ -27,7 +27,7 @@ abstract class AbstractValue implements ValueInterface
 
     /**
      * @var Model
-     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Entity\Model", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
+     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Core\Entity\Model", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     protected $model;
@@ -39,7 +39,7 @@ abstract class AbstractValue implements ValueInterface
 
     /**
      * @var Attribute
-     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Entity\Attribute", fetch="LAZY", cascade={"persist"} )
+     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Core\Entity\Attribute", fetch="LAZY", cascade={"persist"} )
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     protected $attribute;
