@@ -58,11 +58,11 @@ class Attribute
     private $length;
 
     /**
-     * @var ModelType
-     * @ORM\ManyToOne( targetEntity="ModelType", fetch="LAZY" )
+     * @var Schema
+     * @ORM\ManyToOne( targetEntity="Schema", fetch="LAZY" )
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
-    private $modelType;
+    private $schema;
 
     /**
      * @return int|null
@@ -98,20 +98,20 @@ class Attribute
     }
 
     /**
-     * @return ModelType
+     * @return Schema
      */
-    public function getModelType(): ?ModelType
+    public function getSchema(): ?Schema
     {
-        return $this->modelType;
+        return $this->schema;
     }
 
     /**
-     * @param ModelType $modelType
+     * @param Schema $Schema
      * @return Attribute
      */
-    public function setModel( ModelType $modelType ): Attribute
+    public function setEntity(Schema $Schema ): Attribute
     {
-        $this->modelType = $modelType;
+        $this->schema = $Schema;
 
         return $this;
     }

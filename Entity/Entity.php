@@ -14,11 +14,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\ModelRepository")
- * @ORM\Cache(usage="READ_WRITE", region="model_region")
+ * @ORM\Entity(repositoryClass="EntityRepository")
+ * @ORM\Cache(usage="READ_WRITE", region="eav_entity_region")
  * @ORM\HasLifecycleCallbacks()
  */
-class Model
+class Entity
 {
     /**
      * @ORM\Id
@@ -40,8 +40,8 @@ class Model
     private $updatedAt;
 
     /**
-     * @var ModelType
-     * @ORM\ManyToOne( targetEntity="ModelType", inversedBy="model", fetch="EAGER", cascade={"persist", "merge", "refresh"} )
+     * @var Schema
+     * @ORM\ManyToOne( targetEntity="Schema", inversedBy="model", fetch="EAGER", cascade={"persist", "merge", "refresh"} )
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     private $type;
@@ -58,7 +58,7 @@ class Model
      */
     public function __construct()
     {
-        $this->type = new ModelType();
+        $this->type = new Schema();
         $this->values = new ArrayCollection();
     }
 
@@ -105,9 +105,9 @@ class Model
     }
 
     /**
-     * @return ModelType
+     * @return Schema
      */
-    public function getType(): ?ModelType
+    public function getType(): ?Schema
     {
         return $this->type;
     }

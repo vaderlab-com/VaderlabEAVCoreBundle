@@ -13,10 +13,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\ModelTypeRepository")
+ * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\SchemaRepository")
  * @ORM\Cache(usage="READ_WRITE", region="model_type_region")
  */
-class ModelType
+class Schema
 {
     /**
      * @ORM\Id
@@ -33,31 +33,31 @@ class ModelType
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany( targetEntity="Model", mappedBy="type", fetch="LAZY", cascade={"remove"} )
+     * @ORM\OneToMany( targetEntity="Entity", mappedBy="type", fetch="LAZY", cascade={"remove"} )
      */
-    private $models;
+    private $entities;
 
     /**
      * @var Collection
      * @ORM\Cache("NONSTRICT_READ_WRITE")
-     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\Attribute", mappedBy="modelType", fetch="EAGER", cascade={"remove", "persist", "merge"} )
+     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\Attribute", mappedBy="Schema", fetch="EAGER", cascade={"remove", "persist", "merge"} )
      */
     private $attributes;
 
     /**
      * @var Collection
-     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\Form", mappedBy="modelType", fetch="LAZY", cascade={"all"} )
+     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\Form", mappedBy="Schema", fetch="LAZY", cascade={"all"} )
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     private $forms;
 
     /**
-     * ModelType constructor.
+     * Schema constructor.
      */
     public function __construct()
     {
         $this->forms = new ArrayCollection();
-        $this->models = new ArrayCollection();
+        $this->entities = new ArrayCollection();
         $this->attributes = new ArrayCollection();
     }
 
@@ -91,18 +91,18 @@ class ModelType
     /**
      * @return Collection
      */
-    public function getModels(): Collection
+    public function getEntities(): Collection
     {
-        return $this->models;
+        return $this->entities;
     }
 
     /**
-     * @param Collection $models
+     * @param Collection $entities
      * @return $this
      */
-    public function setModels(Collection $models): ModelType
+    public function setEntities(Collection $entities): Schema
     {
-        $this->models = $models;
+        $this->entities = $entities;
 
         return $this;
     }
@@ -119,7 +119,7 @@ class ModelType
      * @param Collection $attributes
      * @return $this
      */
-    public function setAttributes(Collection $attributes): ModelType
+    public function setAttributes(Collection $attributes): Schema
     {
         $this->attributes = $attributes;
 
@@ -136,9 +136,9 @@ class ModelType
 
     /**
      * @param Collection $forms
-     * @return ModelType
+     * @return Schema
      */
-    public function setForms(Collection $forms): ModelType
+    public function setForms(Collection $forms): Schema
     {
         $this->forms = $forms;
 

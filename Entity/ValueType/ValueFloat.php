@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
-class ValueFoat extends AbstractValue
+class ValueFloat extends AbstractValue
 {
     /**
      * @ORM\Id

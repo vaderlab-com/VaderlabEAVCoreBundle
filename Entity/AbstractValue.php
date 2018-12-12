@@ -10,13 +10,21 @@ namespace Vaderlab\EAV\Core\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Vaderlab\EAV\Core\Entity\Model;
+use Vaderlab\EAV\Core\Entity\Entity;
 
 /**
  * Class AbstractValue
  * @package Vaderlab\EAV\Core\Entity\ValueType
  *
- * @ORM\MappedSuperclass()
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorColumn(name="value_type", type="integer")
+ * @ORM\DiscriminatorMap({
+ *     1 = "Vaderlab\EAV\Core\Entity\ValueType\ValueBoolean",
+ *     2 = "Vaderlab\EAV\Core\Entity\ValueType\ValueInteger",
+ *     3 = "Vaderlab\EAV\Core\Entity\ValueType\ValueFloat",
+ *     4 = "Vaderlab\EAV\Core\Entity\ValueType\ValueString",
+ *     5 = "Vaderlab\EAV\Core\Entity\ValueType\ValueText"
+ * })
  */
 abstract class AbstractValue implements ValueInterface
 {
@@ -26,11 +34,11 @@ abstract class AbstractValue implements ValueInterface
     protected $id;
 
     /**
-     * @var Model
-     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Core\Entity\Model", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
+     * @var Entity
+     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Core\Entity\Entity", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
-    protected $model;
+    protected $entity;
 
     /**
      * @var mixed
@@ -72,20 +80,20 @@ abstract class AbstractValue implements ValueInterface
     }
 
     /**
-     * @return Model
+     * @return Entity
      */
-    public function getModel(): ?Model
+    public function getModel(): ?Entity
     {
-        return $this->model;
+        return $this->entity;
     }
 
     /**
-     * @param Model $model
+     * @param Entity $model
      * @return ValueInterface
      */
-    public function setModel(Model $model): ValueInterface
+    public function setModel(Entity $model): ValueInterface
     {
-        $this->model = $model;
+        $this->entity = $model;
 
         return $this;
     }
