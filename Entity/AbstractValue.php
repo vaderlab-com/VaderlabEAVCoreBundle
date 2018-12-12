@@ -15,7 +15,7 @@ use Vaderlab\EAV\Core\Entity\Entity;
 /**
  * Class AbstractValue
  * @package Vaderlab\EAV\Core\Entity\ValueType
- *
+ * @ORM\Entity()
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="value_type", type="integer")
  * @ORM\DiscriminatorMap({
