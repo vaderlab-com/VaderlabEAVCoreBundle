@@ -21,13 +21,6 @@ use Vaderlab\EAV\Core\Entity\AbstractValue;
 class ValueInteger extends AbstractValue
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
-    /**
      * @var integer
      * @ORM\Column( name="val", type="integer", nullable=true )
      */

@@ -20,13 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
 class ValueString extends AbstractValue
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
-    /**
      * @var string
      * @ORM\Column( name="val", type="string", length=2048, nullable=false )
      */

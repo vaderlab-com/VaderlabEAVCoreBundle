@@ -21,13 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
 class ValueBoolean extends AbstractValue
 {
     /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
-    /**
      * @var boolean
      * @ORM\Column( name="val", type="boolean", nullable=false )
      */
