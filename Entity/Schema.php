@@ -45,18 +45,10 @@ class Schema
     private $attributes;
 
     /**
-     * @var Collection
-     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\Form", mappedBy="Schema", fetch="LAZY", cascade={"all"} )
-     * @ORM\Cache("NONSTRICT_READ_WRITE")
-     */
-    private $forms;
-
-    /**
      * Schema constructor.
      */
     public function __construct()
     {
-        $this->forms = new ArrayCollection();
         $this->entities = new ArrayCollection();
         $this->attributes = new ArrayCollection();
     }
@@ -122,25 +114,6 @@ class Schema
     public function setAttributes(Collection $attributes): Schema
     {
         $this->attributes = $attributes;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getForms(): Collection
-    {
-        return $this->forms;
-    }
-
-    /**
-     * @param Collection $forms
-     * @return Schema
-     */
-    public function setForms(Collection $forms): Schema
-    {
-        $this->forms = $forms;
 
         return $this;
     }
