@@ -48,7 +48,7 @@ class Entity
 
     /**
      * @var Collection
-     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\AbstractValue", mappedBy="model", cascade={"all"} )
+     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\AbstractValue", mappedBy="entity", cascade={"all"} )
      * @ORM\Cache("READ_WRITE")
      */
     protected $values;
