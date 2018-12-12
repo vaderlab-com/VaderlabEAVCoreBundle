@@ -29,9 +29,12 @@ use Vaderlab\EAV\Core\Entity\Entity;
 abstract class AbstractValue implements ValueInterface
 {
     /**
-     * @var int
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
     protected $id;
+
 
     /**
      * @var Entity
