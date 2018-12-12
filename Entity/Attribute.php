@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\AttributeRepository")
  * @ORM\Cache(usage="READ_WRITE", region="attribute_region")
  * @ORM\Table(name="Attribute", uniqueConstraints={
- *      @ORM\UniqueConstraint(name="attribute", columns={"name", "model_type_id"})
+ *      @ORM\UniqueConstraint(name="attribute", columns={"name", "schema_id"})
  * })
  */
 class Attribute
