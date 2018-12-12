@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services
@@ -6,7 +7,13 @@
 
     <services>
         <service id="Vaderlab\EAV\Core\Service\DataType\DataTypeProvider">
-            <argument>%vaderlab_eav_core.entity.value_types%</argument>
+            <argument type="collection">
+                <argument key="integer">Vaderlab\EAV\Core\Entity\ValueType\ValueInteger</argument>
+                <argument key="float">Vaderlab\EAV\Core\Entity\ValueType\ValueFloat</argument>
+                <argument key="boolean">Vaderlab\EAV\Core\Entity\ValueType\ValueBoolean</argument>
+                <argument key="string">Vaderlab\EAV\Core\Entity\ValueType\ValueString</argument>
+                <argument key="text">Vaderlab\EAV\Core\Entity\ValueType\ValueText</argument>
+            </argument>
         </service>
     </services>
 </container>
