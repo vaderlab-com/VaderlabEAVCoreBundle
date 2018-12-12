@@ -65,6 +65,12 @@ class Attribute
     private $schema;
 
     /**
+     * @var String
+     * @ORM\Column( name="description", type="string", length=512, nullable=true )
+     */
+    private $description;
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -169,6 +175,25 @@ class Attribute
     public function setLength(int $length): Attribute
     {
         $this->length = $length;
+
+        return $this;
+    }
+
+    /**
+     * @return String
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param String $description
+     * @return $this
+     */
+    public function setDescription(string $description): Attribute
+    {
+        $this->description = $description;
 
         return $this;
     }

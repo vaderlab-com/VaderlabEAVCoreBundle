@@ -117,4 +117,17 @@ class Schema
 
         return $this;
     }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasAttribute(string $name): bool
+    {
+        $attr = $this->attributes->filter(function (Attribute $attribute) use ($name) {
+            return $name === $attribute->getName();
+        });
+
+        return $attr->count() > 0;
+    }
 }

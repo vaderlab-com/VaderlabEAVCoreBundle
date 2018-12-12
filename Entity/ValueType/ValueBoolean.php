@@ -11,6 +11,7 @@ namespace Vaderlab\EAV\Core\Entity\ValueType;
 
 use Vaderlab\EAV\Core\Entity\AbstractValue;
 use Doctrine\ORM\Mapping as ORM;
+use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
 
 /**
  * Class ValueBoolean
@@ -18,13 +19,22 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
-class ValueBoolean extends AbstractValue
+class ValueBoolean extends AbstractValue implements ValueTypeHasDefaultInterface
 {
+    use ValueTypeHasDefaultTrait;
     /**
      * @var boolean
      * @ORM\Column( name="val", type="boolean", nullable=false )
      */
     protected $value = false;
+
+    /**
+     * @return string
+     */
+    protected function getCastType(): string
+    {
+        return 'boolean';
+    }
 
     public function __toString()
     {

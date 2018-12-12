@@ -85,18 +85,18 @@ abstract class AbstractValue implements ValueInterface
     /**
      * @return Entity
      */
-    public function getModel(): ?Entity
+    public function getEntity(): ?Entity
     {
         return $this->entity;
     }
 
     /**
-     * @param Entity $model
+     * @param Entity $entity
      * @return ValueInterface
      */
-    public function setModel(Entity $model): ValueInterface
+    public function setEntity(Entity $entity): ValueInterface
     {
-        $this->entity = $model;
+        $this->entity = $entity;
 
         return $this;
     }

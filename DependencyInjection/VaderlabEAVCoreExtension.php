@@ -32,11 +32,10 @@ class VaderlabEAVCoreExtension extends Extension
 
         $loader->load('services.xml');
 
-
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
+        // $container->setParameter('vaderlab_eav_core.entity.value_types', $config['entity']['value_types']);
 
-        $container->setParameter('vaderlab_eav_core.entity.value_types', $config['entity']['value_types']);
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container)

@@ -11,6 +11,7 @@ namespace Vaderlab\EAV\Core\Entity\ValueType;
 
 use Doctrine\ORM\Mapping as ORM;
 use Vaderlab\EAV\Core\Entity\AbstractValue;
+use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
 
 /**
  * Class ValueInteger
@@ -18,13 +19,22 @@ use Vaderlab\EAV\Core\Entity\AbstractValue;
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
-class ValueInteger extends AbstractValue
+class ValueInteger extends AbstractValue implements ValueTypeHasDefaultInterface
 {
+    use ValueTypeHasDefaultTrait;
     /**
      * @var integer
      * @ORM\Column( name="val", type="integer", nullable=true )
      */
     protected $value;
+
+    /**
+     * @return string
+     */
+    protected function getCastType(): string
+    {
+        return 'integer';
+    }
 
     public function __toString()
     {

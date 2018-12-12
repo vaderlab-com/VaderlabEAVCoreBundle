@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="EntityRepository")
+ * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\EntityRepository")
  * @ORM\Cache(usage="READ_WRITE", region="eav_entity_region")
  * @ORM\HasLifecycleCallbacks()
  */
@@ -44,7 +44,7 @@ class Entity
      * @ORM\ManyToOne( targetEntity="Schema", inversedBy="model", fetch="EAGER", cascade={"persist", "merge", "refresh"} )
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
-    private $type;
+    private $schema;
 
     /**
      * @var Collection
@@ -58,7 +58,7 @@ class Entity
      */
     public function __construct()
     {
-        $this->type = new Schema();
+        $this->schema = new Schema();
         $this->values = new ArrayCollection();
     }
 
@@ -107,9 +107,9 @@ class Entity
     /**
      * @return Schema
      */
-    public function getType(): ?Schema
+    public function getSchema(): ?Schema
     {
-        return $this->type;
+        return $this->schema;
     }
 
     /**
@@ -128,8 +128,38 @@ class Entity
         $this->values = $values;
     }
 
-    public function getValue( string $name )
+    /**
+     * @param string $name
+     * @return array|mixed
+     */
+    public function getValue(string $name)
     {
-        $attributes = $this->getType()->getAttributes();
+        if(!$this->schema->hasAttribute($name)) {
+            return null;
+        }
+
+        $values = $this->values->filter(function (AbstractValue $value) use ($name) {
+            $attribute = $value->getAttribute();
+
+            return $attribute->getName() === $name;
+        });
+
+        $vc = $values->count();
+
+        if( $vc === 0  ) {
+            return null;
+        }
+
+        if( $vc === 1 ) {
+            return $values->first()->getValue();
+        }
+
+        $result = [];
+
+        foreach ($values as $value) {
+            $result[] = $value->getValue();
+        }
+
+        return $result;
     }
 }

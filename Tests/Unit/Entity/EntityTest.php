@@ -36,7 +36,7 @@ class EntityTest extends TestCase
 
     public function testGetType()
     {
-        $type = $this->entity->getType();
+        $type = $this->entity->getSchema();
         $this->assertInstanceOf( Schema::class, $type );
     }
 

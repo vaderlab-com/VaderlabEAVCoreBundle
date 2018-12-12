@@ -11,6 +11,7 @@ namespace Vaderlab\EAV\Core\Entity\ValueType;
 
 use Vaderlab\EAV\Core\Entity\AbstractValue;
 use Doctrine\ORM\Mapping as ORM;
+use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
 
 /**
  * Class ValueFoat
@@ -18,13 +19,23 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
-class ValueFloat extends AbstractValue
+class ValueFloat extends AbstractValue implements ValueTypeHasDefaultInterface
 {
+    use ValueTypeHasDefaultTrait;
+
     /**
      * @var float
      * @ORM\Column( name="val", type="float", nullable=true )
      */
     protected $value;
+
+    /**
+     * @return string
+     */
+    protected function getCastType(): string
+    {
+        return 'float';
+    }
 
     public function __toString()
     {
