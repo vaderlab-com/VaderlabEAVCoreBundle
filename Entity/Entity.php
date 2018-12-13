@@ -29,26 +29,48 @@ class Entity
 
     /**
      * @var \DateTime
-     * @ORM\Column( name="created_at", type="datetime", nullable=false )
+     * @ORM\Column(
+     *     name="created_at",
+     *     type="datetime",
+     *     nullable=false
+     *     )
      */
     private $createdAt;
 
     /**
      * @var \DateTime|null
-     * @ORM\Column( name="updated_at", type="datetime", nullable=true )
+     * @ORM\Column(
+     *     name="updated_at",
+     *     type="datetime",
+     *     nullable=true
+     *     )
      */
     private $updatedAt;
 
     /**
      * @var Schema
-     * @ORM\ManyToOne( targetEntity="Schema", inversedBy="model", fetch="EAGER", cascade={"persist", "merge", "refresh"} )
+     * @ORM\ManyToOne(
+     *     targetEntity="Schema",
+     *     inversedBy="model",
+     *     fetch="EAGER",
+     *     cascade={"persist", "merge", "refresh"}
+     *     )
+     * @ORM\JoinColumn(
+     *     name="schema_id",
+     *     referencedColumnName="id",
+     *     nullable=false
+     *     )
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     private $schema;
 
     /**
      * @var Collection
-     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\AbstractValue", mappedBy="entity", cascade={"all"} )
+     * @ORM\OneToMany(
+     *     targetEntity="Vaderlab\EAV\Core\Entity\AbstractValue",
+     *     mappedBy="entity",
+     *     cascade={"all"}
+     *     )
      * @ORM\Cache("READ_WRITE")
      */
     protected $values;

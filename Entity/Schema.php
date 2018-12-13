@@ -27,20 +27,36 @@ class Schema
 
     /**
      * @var string
-     * @ORM\Column( name="name", type="string", length=50, nullable=false, unique=true )
+     * @ORM\Column(
+     *     name="name",
+     *     type="string",
+     *     length=50,
+     *     nullable=false,
+     *     unique=true
+     *     )
      */
     private $name;
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany( targetEntity="Entity", mappedBy="type", fetch="LAZY", cascade={"remove"} )
+     * @ORM\OneToMany(
+     *     targetEntity="Entity",
+     *     mappedBy="type",
+     *     fetch="LAZY",
+     *     cascade={"remove"}
+     *     )
      */
     private $entities;
 
     /**
      * @var Collection
      * @ORM\Cache("NONSTRICT_READ_WRITE")
-     * @ORM\OneToMany( targetEntity="Vaderlab\EAV\Core\Entity\Attribute", mappedBy="Schema", fetch="EAGER", cascade={"remove", "persist", "merge"} )
+     * @ORM\OneToMany(
+     *     targetEntity="Vaderlab\EAV\Core\Entity\Attribute",
+     *     mappedBy="schema",
+     *     fetch="EAGER",
+     *     cascade={"remove", "persist", "merge"}
+     *     )
      */
     private $attributes;
 

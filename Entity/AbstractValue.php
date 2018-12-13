@@ -38,7 +38,13 @@ abstract class AbstractValue implements ValueInterface
 
     /**
      * @var Entity
-     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Core\Entity\Entity", fetch="EXTRA_LAZY", cascade={"persist", "merge"} )
+     * @ORM\ManyToOne(
+     *     targetEntity="Vaderlab\EAV\Core\Entity\Entity",
+     *     inversedBy="values",
+     *     fetch="EXTRA_LAZY",
+     *     cascade={"persist", "merge"}
+     *     )
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", nullable=false)
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     protected $entity;
@@ -50,7 +56,12 @@ abstract class AbstractValue implements ValueInterface
 
     /**
      * @var Attribute
-     * @ORM\ManyToOne( targetEntity="Vaderlab\EAV\Core\Entity\Attribute", fetch="LAZY", cascade={"persist"} )
+     * @ORM\ManyToOne(
+     *     targetEntity="Vaderlab\EAV\Core\Entity\Attribute",
+     *     fetch="LAZY",
+     *     cascade={"persist"}
+     *     )
+     * @ORM\JoinColumn(name="attribute_id", referencedColumnName="id", nullable=false)
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     protected $attribute;

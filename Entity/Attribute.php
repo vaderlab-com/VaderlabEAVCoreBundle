@@ -14,7 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\AttributeRepository")
  * @ORM\Cache(usage="READ_WRITE", region="attribute_region")
- * @ORM\Table(name="Attribute", uniqueConstraints={
+ * @ORM\Table(name="Attribute",
+ *     uniqueConstraints={
  *      @ORM\UniqueConstraint(name="attribute", columns={"name", "schema_id"})
  * })
  */
@@ -29,37 +30,64 @@ class Attribute
 
     /**
      * @var String
-     * @ORM\Column( name="name", type="string", length=50, nullable=false )
+     * @ORM\Column(
+     *     name="name",
+     *     type="string",
+     *     length=50,
+     *     nullable=false
+     *     )
      */
     private $name;
 
     /**
      * @var String - string, integer, float, text, boolean, spatial ( Polygon, Polyline, etc… ), etc…
-     * @ORM\Column( name="type", type="string", length=50, nullable=false )
+     * @ORM\Column(
+     *     name="type",
+     *     type="string",
+     *     length=50,
+     *     nullable=false
+     *     )
      */
     private $type;
 
     /**
      * @var boolean
-     * @ORM\Column( name="nullable", type="boolean", nullable=false )
+     * @ORM\Column(
+     *     name="nullable",
+     *     type="boolean",
+     *     nullable=false
+     *     )
      */
     private $nullable;
 
     /**
      * @var boolean
-     * @ORM\Column( name="indexable", type="boolean", nullable=false )
+     * @ORM\Column(
+     *     name="indexable",
+     *     type="boolean",
+     *     nullable=false
+     *     )
      */
     private $indexable;
 
     /**
      * @var integer
-     * @ORM\Column( name="length", type="integer", nullable=false )
+     * @ORM\Column(
+     *     name="length",
+     *     type="integer",
+     *     nullable=false
+     *     )
      */
     private $length;
 
     /**
      * @var Schema
-     * @ORM\ManyToOne( targetEntity="Schema", fetch="LAZY" )
+     * @ORM\ManyToOne(
+     *     targetEntity="Schema",
+     *     fetch="LAZY",
+     *     inversedBy="attributes"
+     * )
+     * @ORM\JoinColumn(name="schema_id", referencedColumnName="id", nullable=false)
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     private $schema;
