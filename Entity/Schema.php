@@ -18,12 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Schema
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use BaseEntityTrait;
 
     /**
      * @var string
@@ -67,14 +62,6 @@ class Schema
     {
         $this->entities = new ArrayCollection();
         $this->attributes = new ArrayCollection();
-    }
-
-    /**
-     * @return integer
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**

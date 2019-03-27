@@ -13,5 +13,4 @@ use Doctrine\ORM\EntityRepository as BaseEntityRepository;
 
 class EntityRepository extends BaseEntityRepository
 {
-
 }

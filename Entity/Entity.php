@@ -20,12 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Entity
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use BaseEntityTrait;
 
     /**
      * @var \DateTime
@@ -100,14 +95,6 @@ class Entity
     public function preUpdate()
     {
         $this->updatedAt = new \DateTime();
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     /**

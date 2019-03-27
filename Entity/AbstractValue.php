@@ -28,13 +28,7 @@ use Vaderlab\EAV\Core\Entity\Entity;
  */
 abstract class AbstractValue implements ValueInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
+    use BaseEntityTrait;
 
     /**
      * @var Entity
@@ -65,14 +59,6 @@ abstract class AbstractValue implements ValueInterface
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     protected $attribute;
-
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     /**
      * @return mixed

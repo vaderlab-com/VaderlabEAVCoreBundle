@@ -21,12 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Attribute
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use BaseEntityTrait;
 
     /**
      * @var String
@@ -97,14 +92,6 @@ class Attribute
      * @ORM\Column( name="description", type="string", length=512, nullable=true )
      */
     private $description;
-
-    /**
-     * @return int|null
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     /**
      * @return string|null
