@@ -84,9 +84,9 @@ class Schema
     }
 
     /**
-     * @return Collection
+     * @return \ArrayAccess
      */
-    public function getEntities(): Collection
+    public function getEntities(): \ArrayAccess
     {
         return $this->entities;
     }
@@ -103,18 +103,18 @@ class Schema
     }
 
     /**
-     * @return Collection
+     * @return \ArrayAccess
      */
-    public function getAttributes(): Collection
+    public function getAttributes(): \ArrayAccess
     {
         return $this->attributes;
     }
 
     /**
-     * @param Collection $attributes
+     * @param \ArrayAccess $attributes
      * @return $this
      */
-    public function setAttributes(Collection $attributes): Schema
+    public function setAttributes(\ArrayAccess $attributes): Schema
     {
         $this->attributes = $attributes;
 

@@ -89,9 +89,15 @@ class Attribute
 
     /**
      * @var String
-     * @ORM\Column( name="description", type="string", length=512, nullable=true )
+     * @ORM\Column( name="description", type="text", nullable=true )
      */
     private $description;
+
+    /**
+     * @var String
+     * @ORM\Column( name="default_value", type="string", length=256, nullable=true)
+     */
+    private $defaultValue;
 
     /**
      * @return string|null
@@ -130,7 +136,7 @@ class Attribute
      * @param Schema $Schema
      * @return Attribute
      */
-    public function setEntity(Schema $Schema ): Attribute
+    public function setSchema(Schema $Schema ): Attribute
     {
         $this->schema = $Schema;
 
@@ -209,6 +215,17 @@ class Attribute
     public function setDescription(string $description): Attribute
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @param String $type
+     * @return Attribute
+     */
+    public function setType(String $type): Attribute
+    {
+        $this->type = $type;
 
         return $this;
     }

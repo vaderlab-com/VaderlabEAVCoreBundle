@@ -40,4 +40,18 @@ class DataTypeProvider
     {
         return $this->types;
     }
+
+    /**
+     * @param String $type
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getValueClass(String $type)
+    {
+        if(isset($this->types[$type]) === false) {
+            throw new \Exception(sprintf('Unregistered value type %s', $type));
+        }
+
+        return $this->types[$type];
+    }
 }

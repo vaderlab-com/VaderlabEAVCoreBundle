@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Cache(usage="READ_WRITE", region="eav_entity_region")
  * @ORM\HasLifecycleCallbacks()
  */
-class Entity
+class Entity implements EAVEntityInterface
 {
     use BaseEntityTrait;
 
