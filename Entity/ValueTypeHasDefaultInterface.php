@@ -12,13 +12,7 @@ namespace Vaderlab\EAV\Core\Entity;
 interface ValueTypeHasDefaultInterface extends ValueInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDefaultValue();
-
-    /**
-     * @param $value
-     * @return ValueTypeHasDefaultInterface
-     */
-    public function setDefaultValue($value): ValueTypeHasDefaultInterface;
+    public function getCastType(): string;
 }

@@ -9,6 +9,7 @@
 namespace Vaderlab\EAV\Core\Repository;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository as BaseEntityRepository;
 use Doctrine\ORM\Mapping;
@@ -29,49 +30,13 @@ use Vaderlab\EAV\Core\Service\DataType\DataTypeProvider;
 class EntityRepository extends BaseEntityRepository
 {
     /**
-     * @var DataTypeProvider
-     */
-    private $dataTypeProvider;
-
-    /**
-     * EntityRepository constructor.
-     * @param EntityManagerInterface $em
-     * @param Mapping\ClassMetadata $class
-     * @param DataTypeProvider $dataTypeProvider
-     */
-    public function __construct(
-        EntityManagerInterface $em,
-        Mapping\ClassMetadata $class,
-        DataTypeProvider $dataTypeProvider
-    ) {
-        parent::__construct($em, $class);
-
-        $this->dataTypeProvider = $dataTypeProvider;
-    }
-
-    /**
      * @param Schema $schema
      * @return Entity
      * @throws \Exception
      */
-    public function createEntity(Schema $schema)
+    public function createEntity(Schema $schema): Entity
     {
-        $entity = new Entity();
-        $attributes = $schema->getAttributes();
-        /** @var Attribute $attribute */
-        $entityValues = [];
-        foreach ($attributes as $attribute) {
-            $valueType = $attribute->getType();
-            $valueClass = $this->dataTypeProvider->getValueClass($valueType);
-
-            /** @var AbstractValue $value */
-            $value = new $valueClass();
-            $value->setEntity($entity);
-            $value->setAttribute($attribute);
-            $entityValues[] = $value;
-        }
-
-        $entity->setValues($entityValues);
+        $entity         = new Entity();
 
         return $entity;
     }

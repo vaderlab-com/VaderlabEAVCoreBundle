@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="vaderlab_eav_schema")
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\SchemaRepository")
  * @ORM\Cache(usage="READ_WRITE", region="model_type_region")
  */
@@ -36,7 +37,7 @@ class Schema
      * @var ArrayCollection
      * @ORM\OneToMany(
      *     targetEntity="Entity",
-     *     mappedBy="type",
+     *     mappedBy="schema",
      *     fetch="LAZY",
      *     cascade={"remove"}
      *     )
@@ -127,10 +128,25 @@ class Schema
      */
     public function hasAttribute(string $name): bool
     {
+        return !!$this->getAttribute($name);
+    }
+
+    /**
+     * @param string $name
+     * @return Attribute|null
+     */
+    public function getAttribute(string $name): ?Attribute
+    {
         $attr = $this->attributes->filter(function (Attribute $attribute) use ($name) {
             return $name === $attribute->getName();
         });
 
-        return $attr->count() > 0;
+        $attribute = $attr->first();
+
+        if(!($attribute instanceof Attribute)) {
+            return null;
+        }
+
+        return $attribute;
     }
 }

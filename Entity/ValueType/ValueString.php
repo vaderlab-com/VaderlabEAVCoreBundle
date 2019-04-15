@@ -20,8 +20,6 @@ use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
  */
 class ValueString extends AbstractValue implements ValueTypeHasDefaultInterface
 {
-    use ValueTypeHasDefaultTrait;
-
     /**
      * @var string
      * @ORM\Column( name="val", type="string", length=2048, nullable=false )
@@ -31,7 +29,7 @@ class ValueString extends AbstractValue implements ValueTypeHasDefaultInterface
     /**
      * @return string
      */
-    protected function getCastType(): string
+    public function getCastType(): string
     {
         return 'string';
     }

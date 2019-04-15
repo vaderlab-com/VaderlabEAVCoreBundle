@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="vaderlab_eav_entity")
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\EntityRepository")
  * @ORM\Cache(usage="READ_WRITE", region="eav_entity_region")
  * @ORM\HasLifecycleCallbacks()
@@ -46,7 +47,7 @@ class Entity implements EAVEntityInterface
      * @var Schema
      * @ORM\ManyToOne(
      *     targetEntity="Schema",
-     *     inversedBy="model",
+     *     inversedBy="entities",
      *     fetch="EAGER",
      *     cascade={"persist", "merge", "refresh"}
      *     )
@@ -75,7 +76,6 @@ class Entity implements EAVEntityInterface
      */
     public function __construct()
     {
-        $this->schema = new Schema();
         $this->values = new ArrayCollection();
     }
 
@@ -122,7 +122,17 @@ class Entity implements EAVEntityInterface
     }
 
     /**
-     * @return Collection[]
+     * @param Schema $schema
+     * @return Entity
+     */
+    public function setSchema(Schema $schema): Entity
+    {
+        $this->schema = $schema;
+        return $this;
+    }
+
+    /**
+     * @return ArrayAccess[]
      */
     public function getValues(): Collection
     {
@@ -135,40 +145,5 @@ class Entity implements EAVEntityInterface
     public function setValues(Collection $values): void
     {
         $this->values = $values;
-    }
-
-    /**
-     * @param string $name
-     * @return array|mixed
-     */
-    public function getValue(string $name)
-    {
-        if(!$this->schema->hasAttribute($name)) {
-            return null;
-        }
-
-        $values = $this->values->filter(function (AbstractValue $value) use ($name) {
-            $attribute = $value->getAttribute();
-
-            return $attribute->getName() === $name;
-        });
-
-        $vc = $values->count();
-
-        if( $vc === 0  ) {
-            return null;
-        }
-
-        if( $vc === 1 ) {
-            return $values->first()->getValue();
-        }
-
-        $result = [];
-
-        foreach ($values as $value) {
-            $result[] = $value->getValue();
-        }
-
-        return $result;
     }
 }

@@ -21,7 +21,6 @@ use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
  */
 class ValueInteger extends AbstractValue implements ValueTypeHasDefaultInterface
 {
-    use ValueTypeHasDefaultTrait;
     /**
      * @var integer
      * @ORM\Column( name="val", type="integer", nullable=true )
@@ -31,7 +30,7 @@ class ValueInteger extends AbstractValue implements ValueTypeHasDefaultInterface
     /**
      * @return string
      */
-    protected function getCastType(): string
+    public function getCastType(): string
     {
         return 'integer';
     }

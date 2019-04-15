@@ -10,6 +10,7 @@ namespace Vaderlab\EAV\Core\Entity\ValueType;
 
 use Vaderlab\EAV\Core\Entity\AbstractValue;
 use Doctrine\ORM\Mapping as ORM;
+use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
 
 /**
  * Class ValueString
@@ -17,13 +18,21 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
-class ValueText extends AbstractValue
+class ValueText extends AbstractValue implements ValueTypeHasDefaultInterface
 {
     /**
      * @var string
      * @ORM\Column( name="val", type="text", nullable=false )
      */
     protected $value = '';
+
+    /**
+     * @return string
+     */
+    public function getCastType(): string
+    {
+        return 'string';
+    }
 
     public function __toString()
     {

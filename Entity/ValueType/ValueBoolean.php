@@ -21,7 +21,6 @@ use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
  */
 class ValueBoolean extends AbstractValue implements ValueTypeHasDefaultInterface
 {
-    use ValueTypeHasDefaultTrait;
     /**
      * @var boolean
      * @ORM\Column( name="val", type="boolean", nullable=false )
@@ -31,7 +30,7 @@ class ValueBoolean extends AbstractValue implements ValueTypeHasDefaultInterface
     /**
      * @return string
      */
-    protected function getCastType(): string
+    public function getCastType(): string
     {
         return 'boolean';
     }

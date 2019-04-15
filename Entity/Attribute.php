@@ -12,6 +12,7 @@ namespace Vaderlab\EAV\Core\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="vaderlab_eav_attribute")
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\AttributeRepository")
  * @ORM\Cache(usage="READ_WRITE", region="attribute_region")
  * @ORM\Table(name="Attribute",
@@ -53,7 +54,7 @@ class Attribute
      *     nullable=false
      *     )
      */
-    private $nullable;
+    private $nullable = true;
 
     /**
      * @var boolean
@@ -61,16 +62,25 @@ class Attribute
      *     name="indexable",
      *     type="boolean",
      *     nullable=false
+     * )
+     */
+    private $indexable = false;
+
+    /**
+     * @var boolean
+     * @ORM\Column(
+     *     name="is_unique",
+     *     type="boolean",
+     *     nullable=false
      *     )
      */
-    private $indexable;
-
+    private $isUnique = false;
     /**
      * @var integer
      * @ORM\Column(
      *     name="length",
      *     type="integer",
-     *     nullable=false
+     *     nullable=true
      *     )
      */
     private $length;
@@ -108,7 +118,7 @@ class Attribute
     }
 
 
-    public function setName( string $name ): ?string
+    public function setName( string $name ): Attribute
     {
 
         $this->name = $name;
@@ -226,6 +236,44 @@ class Attribute
     public function setType(String $type): Attribute
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return String
+     */
+    public function getDefaultValue(): ?String
+    {
+        return $this->defaultValue;
+    }
+
+    /**
+     * @param String $defaultValue
+     * @return Attribute
+     */
+    public function setDefaultValue(String $defaultValue): Attribute
+    {
+        $this->defaultValue = $defaultValue;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnique(): bool
+    {
+        return $this->isUnique;
+    }
+
+    /**
+     * @param bool $isUnique
+     * @return Attribute
+     */
+    public function setIsUnique(bool $isUnique): Attribute
+    {
+        $this->isUnique = $isUnique;
 
         return $this;
     }

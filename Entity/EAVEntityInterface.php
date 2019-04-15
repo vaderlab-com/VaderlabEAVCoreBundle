@@ -9,7 +9,7 @@
 namespace Vaderlab\EAV\Core\Entity;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 interface EAVEntityInterface
 {
@@ -21,15 +21,10 @@ interface EAVEntityInterface
     /**
      * @return Schema
      */
-    public function getSchema(): Schema;
+    public function getSchema(): ?Schema;
 
     /**
      * @return ValueInterface
      */
-    public function getValues(): ValueInterface;
-
-    /**
-     * @return ArrayCollection|array
-     */
-    public function getAttributes();
+    public function getValues(): Collection;
 }

@@ -1,19 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services
         http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+
+    <parameters>
+        <!-- value types -->
+        <parameter key="vaderlab.eav.core.value_type.integer">Vaderlab\EAV\Core\Entity\ValueType\ValueInteger</parameter>
+        <parameter key="vaderlab.eav.core.value_type.float">Vaderlab\EAV\Core\Entity\ValueType\ValueFloat</parameter>
+        <parameter key="vaderlab.eav.core.value_type.boolean">Vaderlab\EAV\Core\Entity\ValueType\ValueBoolean</parameter>
+        <parameter key="vaderlab.eav.core.value_type.string">Vaderlab\EAV\Core\Entity\ValueType\ValueString</parameter>
+        <parameter key="vaderlab.eav.core.value_type.text">Vaderlab\EAV\Core\Entity\ValueType\ValueText</parameter>
+        <!-- end value type -->
+
+        <!-- services -->
+        <parameter key="vaderlab.eav.core.service.entity.entity_service.id" >vaderlab.eav.core.service.entity.entity_service_orm</parameter>
+        <!-- end services -->
+    </parameters>
+
     <services>
-        <service id="Vaderlab\EAV\Core\Service\DataType\DataTypeProvider">
+        <defaults autowire="true" autoconfigure="true" public="false"/>
+        <service
+            class="Vaderlab\EAV\Core\Service\DataType\DataTypeProvider"
+            id="vaderlab.eav.core.service.data_type.data_type_provider"
+            public="true">
             <argument type="collection">
-                <argument key="integer">Vaderlab\EAV\Core\Entity\ValueType\ValueInteger</argument>
-                <argument key="float">Vaderlab\EAV\Core\Entity\ValueType\ValueFloat</argument>
-                <argument key="boolean">Vaderlab\EAV\Core\Entity\ValueType\ValueBoolean</argument>
-                <argument key="string">Vaderlab\EAV\Core\Entity\ValueType\ValueString</argument>
-                <argument key="text">Vaderlab\EAV\Core\Entity\ValueType\ValueText</argument>
+                <argument key="integer">%vaderlab.eav.core.value_type.integer%</argument>
+                <argument key="float">%vaderlab.eav.core.value_type.float%</argument>
+                <argument key="boolean">%vaderlab.eav.core.value_type.boolean%</argument>
+                <argument key="string">%vaderlab.eav.core.value_type.string%</argument>
+                <argument key="text">%vaderlab.eav.core.value_type.text%</argument>
             </argument>
         </service>
+
+        <service class="Vaderlab\EAV\Core\Service\Entity\EntityServiceORM" id="vaderlab.eav.core.service.entity.entity_service_orm">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="vaderlab.eav.core.service.data_type.data_type_provider" />
+            <argument type="string">Vaderlab\EAV\Core\Entity\Entity</argument>
+        </service>
+
+        <service id="Vaderlab\EAV\Core\Service\Entity\EntityServiceFactory" public="true">
+            <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
+        </service>
+
+        <service id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" public="false">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="Vaderlab\EAV\Core\Subscriber\Entity\ValueValidationSubscriber">
+            <tag name="doctrine.event_subscriber" connection="default"/>
+            <argument type="service" id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" />
+        </service>
+
     </services>
 </container>

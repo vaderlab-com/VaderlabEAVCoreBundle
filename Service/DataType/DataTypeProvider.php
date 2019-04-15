@@ -9,6 +9,9 @@
 namespace Vaderlab\EAV\Core\Service\DataType;
 
 
+use Vaderlab\EAV\Core\Entity\AbstractValue;
+use Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException;
+
 class DataTypeProvider
 {
     /**
@@ -44,14 +47,26 @@ class DataTypeProvider
     /**
      * @param String $type
      * @return mixed
-     * @throws \Exception
+     * @throws UnregisteredValueTypeException
      */
     public function getValueClass(String $type)
     {
         if(isset($this->types[$type]) === false) {
-            throw new \Exception(sprintf('Unregistered value type %s', $type));
+            throw new UnregisteredValueTypeException($type);
         }
 
         return $this->types[$type];
+    }
+
+    /**
+     * @param String $type
+     * @return AbstractValue
+     * @throws UnregisteredValueTypeException
+     */
+    public function createValueObject(String $type): AbstractValue
+    {
+        $class = $this->getValueClass($type);
+
+        return new $class;
     }
 }
