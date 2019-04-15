@@ -6,12 +6,12 @@
  * Time: 1:45
  */
 
-namespace Vaderlab\EAV\Core\Validator\Schema\Attribute;
+namespace Vaderlab\EAV\Core\Exception\Validator\Schema\Attribute;
 
 
 use Throwable;
 
-class UnknownAttributeValidatorException extends \Exception
+class UnknownAttributeValidatorException extends AttributeConfigurationException
 {
     public function __construct(string $attrTypr = "", int $code = 0, Throwable $previous = null)
     {

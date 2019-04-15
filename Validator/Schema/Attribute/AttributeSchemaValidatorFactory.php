@@ -9,6 +9,8 @@
 namespace Vaderlab\EAV\Core\Validator\Schema\Attribute;
 
 
+use Vaderlab\EAV\Core\Exception\Validator\Schema\Attribute\UnknownAttributeValidatorException;
+
 class AttributeSchemaValidatorFactory
 {
     /**

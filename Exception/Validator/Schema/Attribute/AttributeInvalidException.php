@@ -6,10 +6,9 @@
  * Time: 1:40
  */
 
-namespace Vaderlab\EAV\Core\Validator\Schema\Attribute;
+namespace Vaderlab\EAV\Core\Exception\Validator\Schema\Attribute;
 
 
 class AttributeInvalidException extends \Exception
 {
-
 }

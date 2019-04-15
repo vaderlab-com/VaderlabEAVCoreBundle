@@ -9,7 +9,8 @@
 namespace Vaderlab\EAV\Core\Validator\Schema\Attribute;
 
 
-use Vaderlab\EAV\Core\Service\Schema\AttributeConfigurationException;
+use Vaderlab\EAV\Core\Exception\Validator\Schema\Attribute\AttributeConfigurationException;
+
 
 interface AttributeValidatorInterface
 {
