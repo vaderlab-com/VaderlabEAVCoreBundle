@@ -22,9 +22,10 @@ class ValueString extends AbstractValue implements ValueTypeHasDefaultInterface
 {
     /**
      * @var string
-     * @ORM\Column( name="val", type="string", length=2048, nullable=false )
+     * @ORM\Column( name="val", type="string", length=2048, nullable=true )
      */
     protected $value = '';
+
 
     /**
      * @return string
@@ -32,10 +33,5 @@ class ValueString extends AbstractValue implements ValueTypeHasDefaultInterface
     public function getCastType(): string
     {
         return 'string';
-    }
-
-    public function __toString()
-    {
-        return $this->value;
     }
 }

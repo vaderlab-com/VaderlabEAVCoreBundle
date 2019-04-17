@@ -10,6 +10,8 @@ namespace Vaderlab\EAV\Core\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Table(name="vaderlab_eav_attribute")
@@ -36,6 +38,21 @@ class Attribute
     private $name;
 
     /**
+     * @var string
+     * @ORM\Column(
+     *     name="slug",
+     *     type="string",
+     *     length=50,
+     *     nullable=false
+     *     )
+     * @Assert\Regex(
+     *     match=true,
+     *     pattern="/^[a-z0-9\-\_]+$/i",
+     *     message="The slug is not valid."
+     * )
+     */
+    private $slug = '';
+    /**
      * @var String - string, integer, float, text, boolean, spatial ( Polygon, Polyline, etc… ), etc…
      * @ORM\Column(
      *     name="type",
@@ -44,7 +61,7 @@ class Attribute
      *     nullable=false
      *     )
      */
-    private $type;
+    private $type = '';
 
     /**
      * @var boolean
@@ -101,7 +118,7 @@ class Attribute
      * @var String
      * @ORM\Column( name="description", type="text", nullable=true )
      */
-    private $description;
+    private $description = '';
 
     /**
      * @var String
@@ -194,7 +211,7 @@ class Attribute
     /**
      * @return int
      */
-    public function getLength(): int
+    public function getLength(): ?int
     {
         return $this->length;
     }
@@ -203,7 +220,7 @@ class Attribute
      * @param int $length
      * @return $this
      */
-    public function setLength(int $length): Attribute
+    public function setLength(?int $length = null): Attribute
     {
         $this->length = $length;
 
@@ -213,7 +230,7 @@ class Attribute
     /**
      * @return String
      */
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -222,7 +239,7 @@ class Attribute
      * @param String $description
      * @return $this
      */
-    public function setDescription(string $description): Attribute
+    public function setDescription(?string $description = ''): Attribute
     {
         $this->description = $description;
 
@@ -252,7 +269,7 @@ class Attribute
      * @param String $defaultValue
      * @return Attribute
      */
-    public function setDefaultValue(String $defaultValue): Attribute
+    public function setDefaultValue(String $defaultValue = ''): Attribute
     {
         $this->defaultValue = $defaultValue;
 
@@ -276,5 +293,34 @@ class Attribute
         $this->isUnique = $isUnique;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     * @return Attribute
+     */
+    public function setSlug(string $slug): Attribute
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        $message = sprintf('%s [%s]', $this->getName(), $this->getType());
+
+        return $message . ($this->length ? sprintf(' (%d) ', $this->length) : '');
     }
 }

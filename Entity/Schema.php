@@ -11,6 +11,7 @@ namespace Vaderlab\EAV\Core\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="vaderlab_eav_schema")
@@ -24,6 +25,18 @@ class Schema
     /**
      * @var string
      * @ORM\Column(
+     *     name="entity_class",
+     *     type="string",
+     *     length=150,
+     *     nullable=true,
+     *     unique=true
+     * )
+     */
+    private $entityClass = null;
+
+    /**
+     * @var string
+     * @ORM\Column(
      *     name="name",
      *     type="string",
      *     length=50,
@@ -31,7 +44,24 @@ class Schema
      *     unique=true
      *     )
      */
-    private $name;
+    private $name = '';
+
+    /**
+     * @var string
+     * @ORM\Column(
+     *     name="slug",
+     *     type="string",
+     *     length=50,
+     *     nullable=false,
+     *     unique=true
+     *     )
+     * @Assert\Regex(
+     *     match=true,
+     *     pattern="/^[a-z0-9\-\_]+$/i",
+     *     message="The slug is not valid."
+     * )
+     */
+    private $slug = '';
 
     /**
      * @var ArrayCollection
@@ -68,7 +98,7 @@ class Schema
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -77,7 +107,7 @@ class Schema
      * @param string|null $name
      * @return $this
      */
-    public function setName( ?string $name )
+    public function setName(string $name): Schema
     {
         $this->name = $name;
 
@@ -85,9 +115,9 @@ class Schema
     }
 
     /**
-     * @return \ArrayAccess
+     * @return Collection
      */
-    public function getEntities(): \ArrayAccess
+    public function getEntities(): Collection
     {
         return $this->entities;
     }
@@ -104,18 +134,18 @@ class Schema
     }
 
     /**
-     * @return \ArrayAccess
+     * @return Collection
      */
-    public function getAttributes(): \ArrayAccess
+    public function getAttributes(): Collection
     {
         return $this->attributes;
     }
 
     /**
-     * @param \ArrayAccess $attributes
+     * @param Collection $attributes
      * @return $this
      */
-    public function setAttributes(\ArrayAccess $attributes): Schema
+    public function setAttributes(Collection $attributes): Schema
     {
         $this->attributes = $attributes;
 
@@ -148,5 +178,48 @@ class Schema
         }
 
         return $attribute;
+    }
+
+    /**
+     * @param string $slug
+     * @return Schema
+     */
+    public function setSlug(string $slug): Schema
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function __toString()
+    {
+        return sprintf('%s [%d]', $this->name, $this->id);
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityClass(): ?string
+    {
+        return $this->entityClass;
+    }
+
+    /**
+     * @param string|null $entityClass
+     * @return Schema
+     */
+    public function setEntityClass(?string $entityClass): Schema
+    {
+        $this->entityClass = $entityClass;
+
+        return $this;
     }
 }

@@ -33,9 +33,4 @@ class ValueText extends AbstractValue implements ValueTypeHasDefaultInterface
     {
         return 'string';
     }
-
-    public function __toString()
-    {
-        return $this->value;
-    }
 }

@@ -10,7 +10,6 @@ namespace Vaderlab\EAV\Core\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Vaderlab\EAV\Core\Entity\Entity;
 
 /**
  * Class AbstractValue
@@ -20,11 +19,15 @@ use Vaderlab\EAV\Core\Entity\Entity;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="value_type", type="integer")
  * @ORM\DiscriminatorMap({
- *     1 = "Vaderlab\EAV\Core\Entity\ValueType\ValueBoolean",
- *     2 = "Vaderlab\EAV\Core\Entity\ValueType\ValueInteger",
- *     3 = "Vaderlab\EAV\Core\Entity\ValueType\ValueFloat",
- *     4 = "Vaderlab\EAV\Core\Entity\ValueType\ValueString",
- *     5 = "Vaderlab\EAV\Core\Entity\ValueType\ValueText"
+ *     1    = "Vaderlab\EAV\Core\Entity\ValueType\ValueBoolean",
+ *     2    = "Vaderlab\EAV\Core\Entity\ValueType\ValueInteger",
+ *     3    = "Vaderlab\EAV\Core\Entity\ValueType\ValueFloat",
+ *     4    = "Vaderlab\EAV\Core\Entity\ValueType\ValueString",
+ *     5    = "Vaderlab\EAV\Core\Entity\ValueType\ValueText",
+ *     7    = "Vaderlab\EAV\Core\Entity\ValueType\ValueEmail",
+ *     8    = "Vaderlab\EAV\Core\Entity\ValueType\ValueUrl",
+ *     9    = "Vaderlab\EAV\Core\Entity\ValueType\ValueDate",
+ *     10   = "Vaderlab\EAV\Core\Entity\ValueType\ValueDateTime"
  * })
  */
 abstract class AbstractValue implements ValueInterface
@@ -116,5 +119,13 @@ abstract class AbstractValue implements ValueInterface
         $this->attribute = $attribute;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return (string)$this->value;
     }
 }

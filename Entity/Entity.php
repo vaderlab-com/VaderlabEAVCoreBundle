@@ -81,7 +81,6 @@ class Entity implements EAVEntityInterface
 
     /**
      * @ORM\PrePersist()
-     * @throws \Exception
      */
     public function prePersist()
     {
@@ -90,7 +89,6 @@ class Entity implements EAVEntityInterface
 
     /**
      * @ORM\PreUpdate()
-     * @throws \Exception
      */
     public function preUpdate()
     {
@@ -98,7 +96,7 @@ class Entity implements EAVEntityInterface
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getCreatedAt(): ?\DateTime
     {
@@ -132,7 +130,7 @@ class Entity implements EAVEntityInterface
     }
 
     /**
-     * @return ArrayAccess[]
+     * @return Collection
      */
     public function getValues(): Collection
     {
@@ -140,10 +138,13 @@ class Entity implements EAVEntityInterface
     }
 
     /**
-     * @param Collection[] $values
+     * @param Collection $values
+     * @return Entity
      */
-    public function setValues(Collection $values): void
+    public function setValues(Collection $values): Entity
     {
         $this->values = $values;
+
+        return $this;
     }
 }

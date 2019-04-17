@@ -92,6 +92,11 @@ class EntityServiceORM implements EntityServiceInterface
         return $attributeObj->getValue();
     }
 
+    public function getValueByAttribute(Entity $entity, Attribute $attribute)
+    {
+
+    }
+
     /**
      * @param Entity $entity
      * @return array
@@ -153,6 +158,7 @@ class EntityServiceORM implements EntityServiceInterface
 
         return $this->initEntityValueAttributeByName($schema, $entity, $attributeName);
     }
+
 
     /**
      * @param Schema $schema

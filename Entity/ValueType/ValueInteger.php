@@ -35,7 +35,7 @@ class ValueInteger extends AbstractValue implements ValueTypeHasDefaultInterface
         return 'integer';
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('%d', $this->value );
     }

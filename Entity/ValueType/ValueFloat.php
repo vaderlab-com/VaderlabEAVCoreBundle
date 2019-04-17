@@ -35,7 +35,7 @@ class ValueFloat extends AbstractValue implements ValueTypeHasDefaultInterface
         return 'float';
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('%f', $this->value );
     }

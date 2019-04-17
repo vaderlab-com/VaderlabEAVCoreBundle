@@ -12,6 +12,10 @@
         <parameter key="vaderlab.eav.core.value_type.boolean">Vaderlab\EAV\Core\Entity\ValueType\ValueBoolean</parameter>
         <parameter key="vaderlab.eav.core.value_type.string">Vaderlab\EAV\Core\Entity\ValueType\ValueString</parameter>
         <parameter key="vaderlab.eav.core.value_type.text">Vaderlab\EAV\Core\Entity\ValueType\ValueText</parameter>
+        <parameter key="vaderlab.eav.core.value_type.email">Vaderlab\EAV\Core\Entity\ValueType\ValueEmail</parameter>
+        <parameter key="vaderlab.eav.core.value_type.url">Vaderlab\EAV\Core\Entity\ValueType\ValueUrl</parameter>
+        <parameter key="vaderlab.eav.core.value_type.date">Vaderlab\EAV\Core\Entity\ValueType\ValueDate</parameter>
+        <parameter key="vaderlab.eav.core.value_type.datetime">Vaderlab\EAV\Core\Entity\ValueType\ValueDateTime</parameter>
         <!-- end value type -->
 
         <!-- services -->
@@ -31,6 +35,10 @@
                 <argument key="boolean">%vaderlab.eav.core.value_type.boolean%</argument>
                 <argument key="string">%vaderlab.eav.core.value_type.string%</argument>
                 <argument key="text">%vaderlab.eav.core.value_type.text%</argument>
+                <argument key="email">%vaderlab.eav.core.value_type.email%</argument>
+                <argument key="url">%vaderlab.eav.core.value_type.url%</argument>
+                <argument key="date">%vaderlab.eav.core.value_type.date%</argument>
+                <argument key="datetime">%vaderlab.eav.core.value_type.datetime%</argument>
             </argument>
         </service>
 
@@ -51,6 +59,16 @@
         <service id="Vaderlab\EAV\Core\Subscriber\Entity\ValueValidationSubscriber">
             <tag name="doctrine.event_subscriber" connection="default"/>
             <argument type="service" id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" />
+        </service>
+
+        <service id="vaderlab.eav.core.service.reflection.entity_object_resolver"
+                 class="Vaderlab\EAV\Core\Service\Reflection\EntityObjectResolver"
+                 public="true">
+            <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
+            <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
+        </service>
+
+        <service id="vaderlab.eav.core.service.reflection.reflection" class="Vaderlab\EAV\Core\Service\Reflection\Reflection">
         </service>
 
     </services>
