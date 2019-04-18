@@ -11,6 +11,7 @@ use \ReflectionObject;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignKeyBindException;
+use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException;
 
 class Reflection
 {
@@ -67,17 +68,18 @@ class Reflection
     }
 
     /**
-     * @param object $object
      * @param ReflectionObject $refObject
+     * @param object $object
      * @param string $attribute
-     * @return mixed|null
+     * @return mixed
+     * @throws PropertyNotExistsException
      * @throws ReflectionException
      */
     public function getReflectionAttributeValue(ReflectionObject $refObject, object $object, string $attribute)
     {
         $property = $this->getReflectionProperty($refObject, $attribute);
         if($property === null) {
-            return null;
+            throw new PropertyNotExistsException($attribute, get_class($object));
         }
 
         return $property->getValue($object);

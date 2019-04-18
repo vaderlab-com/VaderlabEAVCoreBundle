@@ -34,24 +34,14 @@ class Attribute
      *     length=50,
      *     nullable=false
      *     )
+     *  @Assert\Regex(
+     *     match=true,
+     *     pattern="/^[a-z0-9\-\_]+$/i",
+     *     message="Attribute name is not valid."
+     * )
      */
     private $name;
 
-    /**
-     * @var string
-     * @ORM\Column(
-     *     name="slug",
-     *     type="string",
-     *     length=50,
-     *     nullable=false
-     *     )
-     * @Assert\Regex(
-     *     match=true,
-     *     pattern="/^[a-z0-9\-\_]+$/i",
-     *     message="The slug is not valid."
-     * )
-     */
-    private $slug = '';
     /**
      * @var String - string, integer, float, text, boolean, spatial ( Polygon, Polyline, etc… ), etc…
      * @ORM\Column(
@@ -291,25 +281,6 @@ class Attribute
     public function setIsUnique(bool $isUnique): Attribute
     {
         $this->isUnique = $isUnique;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @param string $slug
-     * @return Attribute
-     */
-    public function setSlug(string $slug): Attribute
-    {
-        $this->slug = $slug;
 
         return $this;
     }

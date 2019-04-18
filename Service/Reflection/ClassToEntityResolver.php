@@ -13,6 +13,7 @@ use Vaderlab\EAV\Core\Entity\Schema;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException;
 use \ReflectionObject;
 use \ReflectionException;
+use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException;
 use Vaderlab\EAV\Core\Service\Entity\EntityServiceORM;
 
 class ClassToEntityResolver
@@ -81,8 +82,11 @@ class ClassToEntityResolver
 
         foreach ($attributes as $attribute) {
             $attrName   = $attribute->getName();
-            $value      = $this->reflection->getReflectionAttributeValue($reflectionObject, $entityClass, $attrName);
-            $this->entityService->setValue($entity, $attrName, $value);
+            try {
+                $value      = $this->reflection->getReflectionAttributeValue($reflectionObject, $entityClass, $attrName);
+                $this->entityService->setValue($entity, $attrName, $value);
+            } catch (PropertyNotExistsException $e) {
+            }
         }
 
         return $entity;
@@ -94,6 +98,7 @@ class ClassToEntityResolver
      * @return Entity
      * @throws EntityNotFoundException
      * @throws ReflectionException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
      */
     protected function getEntityInstanceByObject(ReflectionObject $reflectionObject, object $entityObject): Entity
     {

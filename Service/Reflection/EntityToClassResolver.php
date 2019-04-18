@@ -7,7 +7,6 @@ namespace Vaderlab\EAV\Core\Service\Reflection;
 use Vaderlab\EAV\Core\Entity\Attribute;
 use Vaderlab\EAV\Core\Entity\Entity;
 use \ReflectionObject;
-use Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignKeyBindException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\ReflectionException;
 use Vaderlab\EAV\Core\Service\Entity\EntityServiceInterface;
 

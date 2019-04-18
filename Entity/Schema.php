@@ -43,25 +43,13 @@ class Schema
      *     nullable=false,
      *     unique=true
      *     )
-     */
-    private $name = '';
-
-    /**
-     * @var string
-     * @ORM\Column(
-     *     name="slug",
-     *     type="string",
-     *     length=50,
-     *     nullable=false,
-     *     unique=true
-     *     )
      * @Assert\Regex(
      *     match=true,
      *     pattern="/^[a-z0-9\-\_]+$/i",
-     *     message="The slug is not valid."
+     *     message="Schema name is not valid."
      * )
      */
-    private $slug = '';
+    private $name = '';
 
     /**
      * @var ArrayCollection
@@ -178,25 +166,6 @@ class Schema
         }
 
         return $attribute;
-    }
-
-    /**
-     * @param string $slug
-     * @return Schema
-     */
-    public function setSlug(string $slug): Schema
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
     }
 
     public function __toString()
