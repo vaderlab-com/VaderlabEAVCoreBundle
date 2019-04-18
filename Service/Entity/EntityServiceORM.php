@@ -138,7 +138,7 @@ class EntityServiceORM implements EntityServiceInterface
      * @throws UnregisteredEntityAttributeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      */
-    protected function getEntityValueObjByName(Entity $entity, string $attributeName): AbstractValue
+    public function getEntityValueObjByName(Entity $entity, string $attributeName): AbstractValue
     {
         $schema = $entity->getSchema();
 

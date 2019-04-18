@@ -7,15 +7,15 @@ namespace Vaderlab\EAV\Core\Service\Reflection;
 use Vaderlab\EAV\Core\Entity\Attribute;
 use Vaderlab\EAV\Core\Entity\Entity;
 use \ReflectionObject;
-use \ReflectionException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignKeyBindException;
+use Vaderlab\EAV\Core\Exception\Service\Reflection\ReflectionException;
 use Vaderlab\EAV\Core\Service\Entity\EntityServiceInterface;
 
 /**
  * Class EntityObjectResolver
  * @package Vaderlab\EAV\Core\Service\Reflection
  */
-class EntityObjectResolver
+class EntityToClassResolver
 {
     /**
      * @var EntityServiceInterface
@@ -43,8 +43,8 @@ class EntityObjectResolver
     /**
      * @param Entity $entity
      * @return object
-     * @throws ForeignKeyBindException
      * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
      */
@@ -87,8 +87,8 @@ class EntityObjectResolver
      * @param Attribute $attribute
      * @param ReflectionObject $reflectionObject
      * @param object $entityObject
-     * @throws ForeignKeyBindException
      * @throws ReflectionException
+     * @throws \ReflectionException
      */
     protected function updateEntityObjectAttribute(
         Entity $entity,
@@ -109,14 +109,13 @@ class EntityObjectResolver
     }
 
     /**
-     * @param Entity $entity
      * @param string $attribute
      * @param ReflectionObject $reflectionObject
      * @param object $entityObject
      * @param null $value
      * @param bool $strict
-     * @throws ForeignKeyBindException
      * @throws ReflectionException
+     * @throws \ReflectionException
      */
     protected function updateEntityObjectByAttributeName(
         string $attribute,
@@ -126,16 +125,12 @@ class EntityObjectResolver
         bool $strict = true
     ): void
     {
-        if(!$reflectionObject->hasProperty($attribute) && $strict) {
-            throw new ForeignKeyBindException($attribute, get_class($entityObject));
+        try {
+            $this->reflectionService->setReflectionAttributeValue($entityObject, $reflectionObject, $attribute, $value);
+        } catch (ReflectionException $e) {
+            if($strict) {
+                throw $e;
+            }
         }
-
-        $property = $reflectionObject->getProperty($attribute);
-
-        if(!$property->isPublic()) {
-            $property->setAccessible(true);
-        }
-
-        $property->setValue($entityObject, $value);
     }
 }

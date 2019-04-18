@@ -4,12 +4,13 @@
 namespace Vaderlab\EAV\Core\Service\Reflection;
 
 
-use Psr\Log\LoggerInterface;
-use ReflectionClass;
+use \ReflectionClass;
+use \ReflectionProperty;
 use \ReflectionException;
 use \ReflectionObject;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException;
+use Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignKeyBindException;
 
 class Reflection
 {
@@ -45,5 +46,61 @@ class Reflection
     public function createReflectionObject(object $entityObject)
     {
         return new ReflectionObject($entityObject);
+    }
+
+    /**
+     * @param object $object
+     * @param ReflectionObject $refObject
+     * @param string $attribute
+     * @param $value
+     * @throws ForeignKeyBindException
+     * @throws ReflectionException
+     */
+    public function setReflectionAttributeValue(object $object, ReflectionObject $refObject, string $attribute, $value): void
+    {
+        $property = $this->getReflectionProperty($refObject, $attribute);
+        if($property === null) {
+            throw new ForeignKeyBindException($attribute, get_class($object));
+        }
+
+        $property->setValue($object, $value);
+    }
+
+    /**
+     * @param object $object
+     * @param ReflectionObject $refObject
+     * @param string $attribute
+     * @return mixed|null
+     * @throws ReflectionException
+     */
+    public function getReflectionAttributeValue(ReflectionObject $refObject, object $object, string $attribute)
+    {
+        $property = $this->getReflectionProperty($refObject, $attribute);
+        if($property === null) {
+            return null;
+        }
+
+        return $property->getValue($object);
+    }
+
+    /**
+     * @param ReflectionObject $reflectionObject
+     * @param string $attribute
+     * @return ReflectionProperty
+     * @throws ReflectionException
+     */
+    protected function getReflectionProperty(ReflectionObject $reflectionObject, string $attribute): ?ReflectionProperty
+    {
+        if(!$reflectionObject->hasProperty($attribute)) {
+            return null;
+        }
+
+        $property = $reflectionObject->getProperty($attribute);
+
+        if(!$property->isPublic()) {
+            $property->setAccessible(true);
+        }
+
+        return $property;
     }
 }

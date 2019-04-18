@@ -134,7 +134,7 @@ class Schema
     }
 
     /**
-     * @return Collection
+     * @return Attribute[]
      */
     public function getAttributes(): Collection
     {

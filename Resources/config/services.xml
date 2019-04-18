@@ -42,7 +42,8 @@
             </argument>
         </service>
 
-        <service class="Vaderlab\EAV\Core\Service\Entity\EntityServiceORM" id="vaderlab.eav.core.service.entity.entity_service_orm">
+        <service class="Vaderlab\EAV\Core\Service\Entity\EntityServiceORM"
+                 id="vaderlab.eav.core.service.entity.entity_service_orm">
             <argument type="service" id="doctrine" />
             <argument type="service" id="vaderlab.eav.core.service.data_type.data_type_provider" />
             <argument type="string">Vaderlab\EAV\Core\Entity\Entity</argument>
@@ -61,15 +62,19 @@
             <argument type="service" id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" />
         </service>
 
-        <service id="vaderlab.eav.core.service.reflection.entity_object_resolver"
-                 class="Vaderlab\EAV\Core\Service\Reflection\EntityObjectResolver"
+        <service id="vaderlab.eav.core.service.reflection.entity_to_class_resolver"
+                 class="Vaderlab\EAV\Core\Service\Reflection\EntityToClassResolver"
                  public="true">
             <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
             <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
         </service>
-
-        <service id="vaderlab.eav.core.service.reflection.reflection" class="Vaderlab\EAV\Core\Service\Reflection\Reflection">
+        <service id="vaderlab.eav.core.service.reflection.class_to_entity_resolver"
+                 class="Vaderlab\EAV\Core\Service\Reflection\ClassToEntityResolver" public="true">
+            <argument type="service" id="doctrine"/>
+            <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
+            <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
         </service>
+        <service id="vaderlab.eav.core.service.reflection.reflection" class="Vaderlab\EAV\Core\Service\Reflection\Reflection" />
 
     </services>
 </container>
