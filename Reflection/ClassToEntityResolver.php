@@ -6,6 +6,7 @@ namespace Vaderlab\EAV\Core\Reflection;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Vaderlab\EAV\Core\Annotation\Id;
 use Vaderlab\EAV\Core\Entity\AbstractValue;
 use Vaderlab\EAV\Core\Entity\Attribute;
 use Vaderlab\EAV\Core\Entity\Entity;
@@ -41,6 +42,11 @@ class ClassToEntityResolver
     private $entityService;
 
     /**
+     * @var EntityClassMetaResolver
+     */
+    private $metaResolver;
+
+    /**
      * ClassToEntityResolver constructor.
      * @param RegistryInterface $doctrine
      * @param Reflection $reflection
@@ -49,13 +55,15 @@ class ClassToEntityResolver
     public function __construct(
         RegistryInterface $doctrine,
         Reflection $reflection,
-        EntityServiceORM $entityService
+        EntityServiceORM $entityService,
+        EntityClassMetaResolver $metaResolver
     ) {
         $this->doctrine         = $doctrine;
         $this->reflection       = $reflection;
         $this->entityService    = $entityService;
         $this->schemaRepository = $doctrine->getRepository(Schema::class);
         $this->entityRepository = $doctrine->getRepository(Entity::class);
+        $this->metaResolver     = $metaResolver;
     }
 
     /**
@@ -67,44 +75,61 @@ class ClassToEntityResolver
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      */
-    public function resolve(EntityInterface $entityClass): Entity
+    public function resolve(object $entityClass): Entity
     {
         $className          = get_class($entityClass);
+
         $schema             = $this->schemaRepository->findOneBy(['entityClass' => $className]);
+
         $reflectionObject   = $this->reflection->createReflectionObject($entityClass);
-
-        $entity             = $this->getEntityInstanceByObject($reflectionObject, $entityClass);
-
+        $reflectionClass    = $this->reflection->createReflectionClass($className);
+        /** @var array<\Vaderlab\EAV\Core\Annotation\Attribute> $attributes */
+        $attributes         = $this->metaResolver->getProtectedAttributes($reflectionClass);
+        $entity             = $this->getEntityInstanceByObject($reflectionClass, $reflectionObject, $entityClass);
 
         if(!$schema || !($schema instanceof Schema )) {
             throw new ClassToEntityBindException($className);
         }
 
-        $attributes = $schema->getAttributes();
-
+        $entity->setSchema($schema);
+        /** @var \Vaderlab\EAV\Core\Annotation\Attribute $attribute */
         foreach ($attributes as $attribute) {
-            $attrName   = $attribute->getName();
-            try {
-                $value      = $this->reflection->getReflectionAttributeValue($reflectionObject, $entityClass, $attrName);
-                $this->entityService->setValue($entity, $attrName, $value);
-            } catch (PropertyNotExistsException $e) {
+            if($attribute instanceof Id) {
+                continue;
             }
+
+            $attrTarget = $attribute->target;
+            $attrName   = $attribute->name;
+            $value      = $this->reflection->getReflectionAttributeValue($reflectionObject, $entityClass, $attrTarget);
+
+            $this->entityService->setValue($entity, $attrName, $value);
         }
 
         return $entity;
     }
 
     /**
+     * @param \ReflectionClass $refClass
      * @param ReflectionObject $reflectionObject
-     * @param EntityInterface $entityObject
+     * @param object $entityObject
      * @return Entity
      * @throws EntityNotFoundException
+     * @throws PropertyNotExistsException
      * @throws ReflectionException
-     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
      */
-    protected function getEntityInstanceByObject(ReflectionObject $reflectionObject, EntityInterface $entityObject): Entity
+    protected function getEntityInstanceByObject(
+        \ReflectionClass $refClass,
+        ReflectionObject $reflectionObject,
+        object $entityObject
+    ): Entity
     {
-        $id = $this->reflection->getReflectionAttributeValue($reflectionObject, $entityObject, Reflection::FOREIGN_PROPERTY);
+        $idProperty = $this->metaResolver->getIdProperty($refClass);
+
+        $id = $this->reflection->getReflectionAttributeValue(
+            $reflectionObject,
+            $entityObject,
+            $idProperty->target
+        );
 
         if(!$id) {
             return new Entity();

@@ -5,8 +5,12 @@ namespace Vaderlab\EAV\Core\Reflection;
 
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Vaderlab\EAV\Core\Annotation\AnnotationHasTarget;
 use Vaderlab\EAV\Core\Annotation\Attributes;
 use Vaderlab\EAV\Core\Annotation\Attribute;
+use Vaderlab\EAV\Core\Annotation\BaseAttribute;
+use Vaderlab\EAV\Core\Annotation\Id;
+use Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException;
 
@@ -37,37 +41,71 @@ class EntityClassMetaResolver
 
     /**
      * @param \ReflectionClass $entityClass
+     * @return Id
+     * @throws ForeignPropertyException
+     * @throws PropertySchemeInvalidException
+     */
+    public function getIdProperty(\ReflectionClass $entityClass)
+    {
+        $fromProperties = $this->getPropertyAnnotation($entityClass, Id::class);
+        $fromClass = $this->getAttributesAnnotationData($entityClass);
+
+        $tmp = array_merge($fromProperties, $fromClass);
+        $idProp = array_filter($tmp, function($val) {
+            return $val instanceof Id;
+        });
+
+        $propsCnt = count($idProp);
+
+        if($propsCnt === 1) {
+            return $idProp[0];
+        }
+
+        $message = $propsCnt === 0 ?
+            'Can not found @Id property' :
+            'The id property is duplicated'
+            ;
+
+        throw new ForeignPropertyException(sprintf('%s at the class %s', $message, $entityClass->getName()));
+    }
+
+
+
+    /**
+     * @param \ReflectionClass $entityClass
      * @return array
      * @throws PropertiesAlreadyDeclaredException
      * @throws PropertySchemeInvalidException
+     *
+     * @todo: Schema validation - temporary solution! Need to be refactoring.
      */
     public function getProtectedAttributes(\ReflectionClass $entityClass): array
     {
         $classAttrs = $this->getAttributesAnnotationData($entityClass);
         $propsAttr = $this->getAttributeAnnotationData($entityClass);
-
         $intersections = array_intersect($classAttrs, $propsAttr);
+        $className = $entityClass->getName();
 
         if( count($intersections) ) {
             $props = array_values($intersections);
-            $class = $entityClass->getName();
 
-            throw new PropertiesAlreadyDeclaredException($props, $class);
+            throw new PropertiesAlreadyDeclaredException($props, $className);
         }
 
-        return array_merge($classAttrs, $propsAttr);
-    }
+        $properties = array_merge($classAttrs, $propsAttr);
 
-    /**
-     * @param \ReflectionObject $entityClass
-     * @return string
-     */
-    public function getAttributesContainerPropertyName(\ReflectionObject $entityClass): string
-    {
-        /** @var Attributes $aObj */
-        $aObj =  $this->annotationReader->getPropertyAnnotation($entityClass, Attributes::class);
+        $invalidProperties = $this->validatePropertiesTargets($properties);
+        /** TODO: Refactoring */
+        if($invalidProperties === true) {
+           return $properties;
+        }
 
-        return $aObj;
+        throw new PropertySchemeInvalidException(
+            sprintf('Incorrectly declared property "target" for attributes (%s) on the class "%s"',
+                implode(', ', $invalidProperties),
+                $className
+            )
+        );
     }
 
     /**
@@ -77,12 +115,22 @@ class EntityClassMetaResolver
      */
     protected function getAttributeAnnotationData(\ReflectionClass $entityClass)
     {
+        return $this->getPropertyAnnotation($entityClass, Attribute::class);
+    }
+
+    /**
+     * @param \ReflectionClass $entityClass
+     * @return array
+     * @throws PropertySchemeInvalidException
+     */
+    protected function getPropertyAnnotation(\ReflectionClass $entityClass, string $annotationClass)
+    {
         $properties = $entityClass->getProperties();
 
         $propsAttr = [];
         foreach($properties as $property) {
-            /** @var Attribute $propAttr */
-            $propAttr = $this->annotationReader->getPropertyAnnotation($property, Attribute::class);
+            /** @var BaseAttribute $propAttr */
+            $propAttr = $this->annotationReader->getPropertyAnnotation($property, $annotationClass);
 
             if( $propAttr === null ) {
                 continue;
@@ -95,8 +143,10 @@ class EntityClassMetaResolver
         return $propsAttr;
     }
 
+
     /**
      * @param \ReflectionClass $entityClass
+     * @param string $classAnnotation
      * @return array
      */
     protected function getAttributesAnnotationData(\ReflectionClass $entityClass)
@@ -116,10 +166,11 @@ class EntityClassMetaResolver
      * @param \ReflectionProperty $target
      * @throws PropertySchemeInvalidException
      */
-    protected function setAttributeTarget(Attribute $attribute, \ReflectionProperty $target)
+    protected function setAttributeTarget(BaseAttribute $attribute, \ReflectionProperty $target)
     {
         $tmpT = $attribute->target;
         $propertyName = $target->getName();
+
         if($tmpT !== null && $tmpT !== $propertyName) {
             throw new PropertySchemeInvalidException(
                 sprintf( 'Incorrectly declared property "target" for attribute %s on the class %s',
@@ -130,5 +181,32 @@ class EntityClassMetaResolver
         }
 
         $attribute->target = $propertyName;
+    }
+
+    /**
+     * @param array $attributes
+     * @return array|bool
+     */
+    protected function validatePropertiesTargets(array $attributes)
+    {
+        $targets = [];
+        /** @var BaseAttribute $attribute */
+        foreach ($attributes as $attribute) {
+            $target = $attribute->target;
+            if($target === null) {
+                $attribute->target = (string)$attribute;
+            }
+
+            $targets[] = $attribute->target;
+        }
+
+        $countTargets = array_count_values($targets);
+        $filtered = array_filter(
+            $countTargets,
+            function ($elem) {
+                return($elem > 1);
+            });
+
+        return !count($filtered) ?: array_keys($filtered);
     }
 }

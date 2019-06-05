@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping\Annotation;
  * @Annotation
  * @Target({"ANNOTATION", "PROPERTY"})
  */
-class Attribute implements Annotation
+class Attribute extends BaseAttribute
 {
     public $target;
 

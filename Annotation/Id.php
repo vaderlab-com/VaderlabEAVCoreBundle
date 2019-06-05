@@ -3,6 +3,7 @@
 
 namespace Vaderlab\EAV\Core\Annotation;
 
+
 use Doctrine\ORM\Mapping\Annotation;
 
 /**
@@ -10,16 +11,14 @@ use Doctrine\ORM\Mapping\Annotation;
  * @package Vaderlab\EAV\Core\Annotation
  *
  * @Annotation
- * @Target({"CLASS"})
+ * @Target({"ANNOTATION", "PROPERTY"})
  */
-class ProtectedEntity implements Annotation
+class Id  extends BaseAttribute
 {
-    /**
-     */
-    public $name;
+    public $target;
 
     public function __toString(): string
     {
-        return $this->name;
+        return 'id';
     }
 }

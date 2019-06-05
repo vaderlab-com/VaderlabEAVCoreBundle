@@ -173,6 +173,8 @@ class EntityServiceORM implements EntityServiceInterface
         $valueObject        = $this->dataTypeProvider->createValueObject($attributeObject->getType());
 
         $valueObject->setEntity($entity);
+        $entity->getValues()->add($valueObject);
+
         $valueObject->setAttribute($attributeObject);
 
         if (!($valueObject instanceof ValueTypeHasDefaultInterface)) {

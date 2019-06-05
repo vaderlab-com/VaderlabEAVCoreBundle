@@ -62,19 +62,25 @@
             <argument type="service" id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" />
         </service>
 
+        <service  id="vaderlab.eav.core.event_dispatcher" class="Symfony\Component\EventDispatcher\EventDispatcher" />
+
         <service id="vaderlab.eav.core.service.reflection.reflection" class="Vaderlab\EAV\Core\Reflection\Reflection" public="true" />
+
         <service id="vaderlab.eav.core.service.reflection.entity_to_class_resolver"
                  class="Vaderlab\EAV\Core\Reflection\EntityToClassResolver"
                  public="true">
             <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
             <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
+            <argument type="service" id="vaderlab.eav.core.service.reflection.class_metadata_resolver" />
         </service>
+
         <service id="vaderlab.eav.core.service.reflection.class_to_entity_resolver"
                  class="Vaderlab\EAV\Core\Reflection\ClassToEntityResolver"
                  public="true">
             <argument type="service" id="doctrine"/>
             <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
             <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
+            <argument type="service" id="vaderlab.eav.core.service.reflection.class_metadata_resolver" />
         </service>
 
         <service id="vaderlab.eav.core.service.orm.entity_manager"

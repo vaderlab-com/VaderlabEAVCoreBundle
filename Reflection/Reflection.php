@@ -52,7 +52,7 @@ class Reflection
      * @param object $entityObject
      * @return ReflectionObject
      */
-    public function createReflectionObject(EntityInterface $entityObject)
+    public function createReflectionObject(object $entityObject)
     {
         return new ReflectionObject($entityObject);
     }

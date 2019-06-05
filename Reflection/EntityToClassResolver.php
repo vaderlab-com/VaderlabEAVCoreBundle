@@ -4,7 +4,9 @@
 namespace Vaderlab\EAV\Core\Reflection;
 
 
-use Vaderlab\EAV\Core\Entity\Attribute;
+use Vaderlab\EAV\Core\Annotation\Attribute;
+use Vaderlab\EAV\Core\Annotation\BaseAttribute;
+use Vaderlab\EAV\Core\Annotation\Id;
 use Vaderlab\EAV\Core\Entity\Entity;
 use \ReflectionObject;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\ReflectionException;
@@ -27,15 +29,23 @@ class EntityToClassResolver
     private $reflectionService;
 
     /**
-     * EntityObjectResolver constructor.
+     * @var EntityClassMetaResolver
+     */
+    private $metaResolverService;
+
+    /**
+     * EntityToClassResolver constructor.
      * @param EntityServiceInterface $entityService
      * @param Reflection $reflection
+     * @param EntityClassMetaResolver $entityClassMetaResolver
      */
     public function __construct(
         EntityServiceInterface $entityService,
-        Reflection $reflection
+        Reflection $reflection,
+        EntityClassMetaResolver $entityClassMetaResolver
     ) {
         $this->entityService = $entityService;
+        $this->metaResolverService = $entityClassMetaResolver;
         $this->reflectionService = $reflection;
     }
 
@@ -56,12 +66,16 @@ class EntityToClassResolver
             return $entity;
         }
 
-        $attributes     = $schema->getAttributes();
+        $entityId       = $entity->getId();
         $entityObject   = $this->reflectionService->createObject($entityClass);
         $entityRef      = $this->reflectionService->createReflectionObject($entityObject);
+        $entityRefClass = $this->reflectionService->createReflectionClass($entityClass);
+        /** @var array<Attribute> $protectedAttrs */
+        $protectedAttrs = $this->metaResolverService->getProtectedAttributes($entityRefClass);
+        $idAttr         = $this->metaResolverService->getIdProperty($entityRefClass);
 
         /** @var Attribute $attribute */
-        foreach ($attributes as $attribute) {
+        foreach ($protectedAttrs as $attribute) {
             $this->updateEntityObjectAttribute(
                 $entity,
                 $attribute,
@@ -70,16 +84,23 @@ class EntityToClassResolver
             );
         }
 
+        if(!$entityId) {
+            return $entityObject;
+        }
+
         $this->updateEntityObjectByAttributeName(
-            Reflection::FOREIGN_PROPERTY,
+            $idAttr->target,
             $entityRef,
             $entityObject,
             $entity->getId(),
             true
         );
 
+
         return $entityObject;
     }
+
+
 
     /**
      * @param Entity $entity
@@ -91,21 +112,28 @@ class EntityToClassResolver
      */
     protected function updateEntityObjectAttribute(
         Entity $entity,
-        Attribute $attribute,
+        BaseAttribute $attribute,
         ReflectionObject $reflectionObject,
         object $entityObject
     ): void
     {
-        $attrName = $attribute->getName();
+
+        if(($attribute instanceof Id)) {
+            return;
+        }
+
+        $target = $attribute->target;
+        $attrName = $attribute->name;
         $currentValue = $this->entityService->getValue($entity, $attrName);
         $this->updateEntityObjectByAttributeName(
-            $attrName,
+            $target,
             $reflectionObject,
             $entityObject,
             $currentValue,
             false
         );
     }
+
 
     /**
      * @param string $attribute
