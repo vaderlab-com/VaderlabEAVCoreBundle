@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Service\Reflection;
+namespace Vaderlab\EAV\Core\Reflection;
 
 
 use \ReflectionClass;
@@ -12,6 +12,7 @@ use Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignKeyBindException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException;
+use Vaderlab\EAV\Core\Model\EntityInterface;
 
 class Reflection
 {
@@ -25,6 +26,14 @@ class Reflection
      */
     public function createObject(string $class): object
     {
+        $refClass = $this->createReflectionClass($class);
+        $refObject = $refClass->newInstanceWithoutConstructor();
+
+        return $refObject;
+    }
+
+    public function createReflectionClass(string $class): \ReflectionClass
+    {
         if(!class_exists($class)) {
             throw new EntityClassNotExistsException($class);
         }
@@ -35,16 +44,15 @@ class Reflection
             throw new EntityClassBindException($class, 0, $e);
         }
 
-        $refObject = $refClass->newInstanceWithoutConstructor();
+        return $refClass;
 
-        return $refObject;
     }
 
     /**
      * @param object $entityObject
      * @return ReflectionObject
      */
-    public function createReflectionObject(object $entityObject)
+    public function createReflectionObject(EntityInterface $entityObject)
     {
         return new ReflectionObject($entityObject);
     }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Service\Reflection;
+namespace Vaderlab\EAV\Core\Reflection;
 
 
 use Doctrine\ORM\EntityNotFoundException;
@@ -14,6 +14,7 @@ use Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException;
 use \ReflectionObject;
 use \ReflectionException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException;
+use Vaderlab\EAV\Core\Model\EntityInterface;
 use Vaderlab\EAV\Core\Service\Entity\EntityServiceORM;
 
 class ClassToEntityResolver
@@ -66,11 +67,12 @@ class ClassToEntityResolver
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      */
-    public function resolve(object $entityClass): Entity
+    public function resolve(EntityInterface $entityClass): Entity
     {
         $className          = get_class($entityClass);
         $schema             = $this->schemaRepository->findOneBy(['entityClass' => $className]);
         $reflectionObject   = $this->reflection->createReflectionObject($entityClass);
+
         $entity             = $this->getEntityInstanceByObject($reflectionObject, $entityClass);
 
 
@@ -94,13 +96,13 @@ class ClassToEntityResolver
 
     /**
      * @param ReflectionObject $reflectionObject
-     * @param object $entityObject
+     * @param EntityInterface $entityObject
      * @return Entity
      * @throws EntityNotFoundException
      * @throws ReflectionException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
      */
-    protected function getEntityInstanceByObject(ReflectionObject $reflectionObject, object $entityObject): Entity
+    protected function getEntityInstanceByObject(ReflectionObject $reflectionObject, EntityInterface $entityObject): Entity
     {
         $id = $this->reflection->getReflectionAttributeValue($reflectionObject, $entityObject, Reflection::FOREIGN_PROPERTY);
 

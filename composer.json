@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "Entity Attribute model integration",
   "require": {
-    "php": "^7.1.3",
+    "php": ">=7.1.3",
     "doctrine/orm": "~2.4",
     "symfony/framework-bundle": "^2.7.22|~3.0|~4.0",
     "doctrine/doctrine-cache-bundle": "~1.2"

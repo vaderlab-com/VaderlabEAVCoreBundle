@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Service\Reflection;
+namespace Vaderlab\EAV\Core\Reflection;
 
 
 use Vaderlab\EAV\Core\Entity\Attribute;
@@ -12,7 +12,7 @@ use Vaderlab\EAV\Core\Service\Entity\EntityServiceInterface;
 
 /**
  * Class EntityObjectResolver
- * @package Vaderlab\EAV\Core\Service\Reflection
+ * @package Vaderlab\EAV\Core\Reflection
  */
 class EntityToClassResolver
 {
