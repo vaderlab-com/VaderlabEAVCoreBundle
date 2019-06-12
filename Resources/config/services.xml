@@ -3,55 +3,16 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services
         http://symfony.com/schema/dic/services/services-1.0.xsd">
-
-
-    <parameters>
-        <!-- value types -->
-        <parameter key="vaderlab.eav.core.value_type.integer">Vaderlab\EAV\Core\Entity\ValueType\ValueInteger</parameter>
-        <parameter key="vaderlab.eav.core.value_type.float">Vaderlab\EAV\Core\Entity\ValueType\ValueFloat</parameter>
-        <parameter key="vaderlab.eav.core.value_type.boolean">Vaderlab\EAV\Core\Entity\ValueType\ValueBoolean</parameter>
-        <parameter key="vaderlab.eav.core.value_type.string">Vaderlab\EAV\Core\Entity\ValueType\ValueString</parameter>
-        <parameter key="vaderlab.eav.core.value_type.text">Vaderlab\EAV\Core\Entity\ValueType\ValueText</parameter>
-        <parameter key="vaderlab.eav.core.value_type.email">Vaderlab\EAV\Core\Entity\ValueType\ValueEmail</parameter>
-        <parameter key="vaderlab.eav.core.value_type.url">Vaderlab\EAV\Core\Entity\ValueType\ValueUrl</parameter>
-        <parameter key="vaderlab.eav.core.value_type.date">Vaderlab\EAV\Core\Entity\ValueType\ValueDate</parameter>
-        <parameter key="vaderlab.eav.core.value_type.datetime">Vaderlab\EAV\Core\Entity\ValueType\ValueDateTime</parameter>
-        <!-- end value type -->
-
-        <!-- services -->
-        <parameter key="vaderlab.eav.core.service.entity.entity_service.id" >vaderlab.eav.core.service.entity.entity_service_orm</parameter>
-        <!-- end services -->
-    </parameters>
+    <imports>
+        <import resource="value_types.xml"/>
+        <import resource="reflection.xml"/>
+        <import resource="orm.xml" />
+        <import resource="command.xml"/>
+        <import resource="schema_discovery.xml"/>
+    </imports>
 
     <services>
         <defaults autowire="true" autoconfigure="true" public="false"/>
-        <service
-            class="Vaderlab\EAV\Core\Service\DataType\DataTypeProvider"
-            id="vaderlab.eav.core.service.data_type.data_type_provider"
-            public="true">
-            <argument type="collection">
-                <argument key="integer">%vaderlab.eav.core.value_type.integer%</argument>
-                <argument key="float">%vaderlab.eav.core.value_type.float%</argument>
-                <argument key="boolean">%vaderlab.eav.core.value_type.boolean%</argument>
-                <argument key="string">%vaderlab.eav.core.value_type.string%</argument>
-                <argument key="text">%vaderlab.eav.core.value_type.text%</argument>
-                <argument key="email">%vaderlab.eav.core.value_type.email%</argument>
-                <argument key="url">%vaderlab.eav.core.value_type.url%</argument>
-                <argument key="date">%vaderlab.eav.core.value_type.date%</argument>
-                <argument key="datetime">%vaderlab.eav.core.value_type.datetime%</argument>
-            </argument>
-        </service>
-
-        <service class="Vaderlab\EAV\Core\Service\Entity\EntityServiceORM"
-                 id="vaderlab.eav.core.service.entity.entity_service_orm">
-            <argument type="service" id="doctrine" />
-            <argument type="service" id="vaderlab.eav.core.service.data_type.data_type_provider" />
-            <argument type="string">Vaderlab\EAV\Core\Entity\Entity</argument>
-        </service>
-
-        <service id="Vaderlab\EAV\Core\Service\Entity\EntityServiceFactory" public="true">
-            <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
-        </service>
 
         <service id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" public="false">
             <argument type="service" id="doctrine" />
@@ -63,40 +24,6 @@
         </service>
 
         <service  id="vaderlab.eav.core.event_dispatcher" class="Symfony\Component\EventDispatcher\EventDispatcher" />
-
-        <service id="vaderlab.eav.core.service.reflection.reflection" class="Vaderlab\EAV\Core\Reflection\Reflection" public="true" />
-
-        <service id="vaderlab.eav.core.service.reflection.entity_to_class_resolver"
-                 class="Vaderlab\EAV\Core\Reflection\EntityToClassResolver"
-                 public="true">
-            <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
-            <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
-            <argument type="service" id="vaderlab.eav.core.service.reflection.class_metadata_resolver" />
-        </service>
-
-        <service id="vaderlab.eav.core.service.reflection.class_to_entity_resolver"
-                 class="Vaderlab\EAV\Core\Reflection\ClassToEntityResolver"
-                 public="true">
-            <argument type="service" id="doctrine"/>
-            <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
-            <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
-            <argument type="service" id="vaderlab.eav.core.service.reflection.class_metadata_resolver" />
-        </service>
-
-        <service id="vaderlab.eav.core.service.orm.entity_manager"
-                 class="Vaderlab\EAV\Core\Service\ORM\EntityManager"
-                 public="true">
-            <argument type="service" id="doctrine.orm.default_entity_manager"/>
-            <argument type="service" id="vaderlab.eav.core.service.reflection.class_to_entity_resolver" />
-            <argument type="service" id="vaderlab.eav.core.service.reflection.entity_to_class_resolver" />
-        </service>
-
-        <service id="vaderlab.eav.core.service.reflection.class_metadata_resolver"
-                 class="Vaderlab\EAV\Core\Reflection\EntityClassMetaResolver"
-                 public="true" >
-            <argument type="service" id="annotations.reader" />
-            <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
-        </service>
 
     </services>
 </container>

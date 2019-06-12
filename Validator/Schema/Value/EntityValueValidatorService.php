@@ -15,7 +15,7 @@ use Vaderlab\EAV\Core\Exception\Validator\Schema\Value\ValueUniqueException;
  * Class EntityValueValidatorService
  * @package Vaderlab\EAV\Core\Service\Entity
  *
- * TODO: Temporary solution !!!
+ * @TODO: Temporary solution !!!
  */
 class EntityValueValidatorService implements EntityValueValidatorServiceInterface
 {

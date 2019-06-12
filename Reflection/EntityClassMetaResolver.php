@@ -4,12 +4,14 @@
 namespace Vaderlab\EAV\Core\Reflection;
 
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Vaderlab\EAV\Core\Annotation\AnnotationHasTarget;
 use Vaderlab\EAV\Core\Annotation\Attributes;
 use Vaderlab\EAV\Core\Annotation\Attribute;
 use Vaderlab\EAV\Core\Annotation\BaseAttribute;
 use Vaderlab\EAV\Core\Annotation\Id;
+use Vaderlab\EAV\Core\Annotation\ProtectedEntity;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException;
@@ -94,18 +96,33 @@ class EntityClassMetaResolver
 
         $properties = array_merge($classAttrs, $propsAttr);
 
-        $invalidProperties = $this->validatePropertiesTargets($properties);
+        $isValidProperties = $this->validatePropertiesTargets($properties);
         /** TODO: Refactoring */
-        if($invalidProperties === true) {
+        if($isValidProperties === true) {
            return $properties;
         }
 
         throw new PropertySchemeInvalidException(
             sprintf('Incorrectly declared property "target" for attributes (%s) on the class "%s"',
-                implode(', ', $invalidProperties),
+                implode(', ', $isValidProperties),
                 $className
             )
         );
+    }
+
+    /**
+     * @param $refClass
+     * @return bool
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     */
+    public function isProtectedSchema($refClass): bool
+    {
+        if(is_string($refClass)) {
+            $refClass = $this->reflection->createReflectionClass($refClass);
+        }
+
+        return !!$this->annotationReader->getClassAnnotation($refClass, ProtectedEntity::class);
     }
 
     /**
