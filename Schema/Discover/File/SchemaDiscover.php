@@ -4,8 +4,8 @@
 namespace Vaderlab\EAV\Core\Schema\Discover\File;
 
 
-use Vaderlab\EAV\Core\Annotation\Attribute;
 use Vaderlab\EAV\Core\Annotation\Id;
+use Vaderlab\EAV\Core\Schema\Discover\SchemaToArrayConverter;
 use Vaderlab\EAV\Core\Reflection\EntityClassMetaResolver;
 use Vaderlab\EAV\Core\Reflection\Reflection;
 use Vaderlab\EAV\Core\Schema\Discover\SchemaDiscoverInterface;
@@ -27,6 +27,11 @@ class SchemaDiscover implements SchemaDiscoverInterface
     private $classMetaResolver;
 
     /**
+     * @var SchemaToArrayConverter
+     */
+    private $schemaToArrayConverter;
+
+    /**
      * FileSchema constructor.
      * @param ProtectedSchemasDiscovery $schemasDiscovery
      * @param Reflection $reflection
@@ -35,11 +40,13 @@ class SchemaDiscover implements SchemaDiscoverInterface
     public function __construct(
         ProtectedSchemasDiscovery $schemasDiscovery,
         Reflection $reflection,
-        EntityClassMetaResolver $classMetaResolver
+        EntityClassMetaResolver $classMetaResolver,
+        SchemaToArrayConverter $schemaToArrayConverter
     ) {
         $this->schemasDiscovery = $schemasDiscovery;
         $this->reflection = $reflection;
         $this->classMetaResolver = $classMetaResolver;
+        $this->schemaToArrayConverter = $schemaToArrayConverter;
     }
 
     /**
@@ -88,7 +95,7 @@ class SchemaDiscover implements SchemaDiscoverInterface
      */
     protected function pushToSchemaArray(string $class, array &$output)
     {
-        $output[$class] = $this->generateEntitySchema($class);
+        $output[] = $this->generateEntitySchema($class);
     }
 
     /**
@@ -102,28 +109,28 @@ class SchemaDiscover implements SchemaDiscoverInterface
     protected function generateEntitySchema(string $class): array
     {
         $refClass = $this->reflection->createReflectionClass($class);
-        $attributes = $this->classMetaResolver->getProtectedAttributes($refClass);
+        $attributeSchema = $this->classMetaResolver->getProtectedAttributes($refClass);
+        $this->classMetaResolver->getProtectedAttributes($refClass);
 
-        $attributeSchema = [];
+        $protectedAnnotation = $this->classMetaResolver->getProtectedEntityAnnotation($class);
+        $schemaName = $protectedAnnotation->name ?: $refClass->getShortName();
 
-        /** @var Attribute $attribute */
-        foreach ($attributes as $attribute) {
-            if($attribute instanceof Id) {
-                continue;
+        for ($i = 0; $i < count($attributeSchema); ++$i) {
+            $attr = $attributeSchema[$i];
+
+            if($attr instanceof Id) {
+                unset($attributeSchema[$i]);
             }
-
-            $attributeSchema[] = [
-                'name'  => $attribute->name,
-                'defaultValue'  => $attribute->default,
-                'type'  => $attribute->type,
-                'length'    => $attribute->length,
-                'nullable'  => $attribute->nullable,
-                'indexable' => $attribute->indexable,
-                'unique'    => $attribute->unique,
-                'description'   => $attribute->description,
-            ];
         }
 
-        return $attributeSchema;
+        $this->schemaToArrayConverter->loadSchema([
+            'class' => $class,
+            'attributes'    => $attributeSchema,
+            'name'  => $schemaName,
+        ]);
+
+        $schema = $this->schemaToArrayConverter->convert();
+
+        return $schema;
     }
 }

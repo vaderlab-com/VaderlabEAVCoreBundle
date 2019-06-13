@@ -7,20 +7,20 @@ namespace Vaderlab\EAV\Core\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Vaderlab\EAV\Core\Schema\Discover\File\SchemaDiscover;
+use Vaderlab\EAV\Core\Schema\Diff\Diff;
+use Vaderlab\EAV\Core\Schema\Discover\SchemaDiscoverInterface;
 
 class SchemaUpdateCommand extends Command
 {
     /**
      * @var ProtectedSchemasDiscovery
      */
-    private $schemesDiscovery;
+    private $diff;
 
-    public function __construct(SchemaDiscover $schemesDiscovery)
-    {
+    public function __construct(Diff $diff) {
         parent::__construct();
 
-        $this->schemesDiscovery = $schemesDiscovery;
+        $this->diff = $diff;
     }
 
     /**
@@ -41,9 +41,9 @@ class SchemaUpdateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $classes = $this->schemesDiscovery->getSchema();
+        //$classes = $this->schemesDiscoveryORM->getSchema();
+        $diff = $this->diff->diff();
 
-
-        dump($classes);
+        dump($diff);
     }
 }

@@ -71,7 +71,10 @@ class EntityClassMetaResolver
         throw new ForeignPropertyException(sprintf('%s at the class %s', $message, $entityClass->getName()));
     }
 
+    public function getSchemaName(\ReflectionClass $entityClass)
+    {
 
+    }
 
     /**
      * @param \ReflectionClass $entityClass
@@ -118,11 +121,16 @@ class EntityClassMetaResolver
      */
     public function isProtectedSchema($refClass): bool
     {
+        return !!$this->getProtectedEntityAnnotation($refClass);
+    }
+
+    public function getProtectedEntityAnnotation($refClass)
+    {
         if(is_string($refClass)) {
             $refClass = $this->reflection->createReflectionClass($refClass);
         }
 
-        return !!$this->annotationReader->getClassAnnotation($refClass, ProtectedEntity::class);
+        return $this->annotationReader->getClassAnnotation($refClass, ProtectedEntity::class);
     }
 
     /**

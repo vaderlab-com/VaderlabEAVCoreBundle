@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Schema\Discover\Database;
+namespace Vaderlab\EAV\Core\Schema\Discover\ORM;
 
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,9 +12,14 @@ class SchemaDiscover implements SchemaDiscoverInterface
 {
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    private $converter;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SchemaToArrayConverter $converter
+    ) {
         $this->entityManager = $entityManager;
+        $this->converter = $converter;
     }
 
     /**
@@ -27,22 +32,10 @@ class SchemaDiscover implements SchemaDiscoverInterface
         $result = [];
         /** @var Schema $schema */
         foreach ($allSchemas as $schema) {
-            $schema->getAttributes();
+            $this->converter->loadSchema($schema);
+            $result[] = $this->converter->convert();
         }
 
-        return [];
-    }
-
-    protected function buildSchemaArray(Schema $schema): array
-    {
-        $classname = $schema->getEntityClass();
-        $attributes = $schema->getAttributes();
-        $name = $schema->getName();
-
-        return [
-            $classname  => [
-                ''
-            ],
-        ];
+        return $result;
     }
 }

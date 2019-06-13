@@ -5,7 +5,7 @@
         http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="Vaderlab\EAV\Core\Command\SchemaUpdateCommand">
-            <argument type="service" id="vaderlab.eav.core.schema.discover.file_schema" />
+            <argument type="service" id="vaderlab.eav.core.schema.diff" />
             <tag name="console.command" command="vaderlab:eav:schema-update" />
         </service>
     </services>

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Schema\Discover\Database;
+namespace Vaderlab\EAV\Core\Schema\Discover\ORM;
 
 
 use Vaderlab\EAV\Core\Entity\Attribute;

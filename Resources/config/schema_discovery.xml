@@ -20,6 +20,43 @@
             <argument type="service" id="vaderlab.eav.core.schema.discover.protected_schemas_discovery" />
             <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
             <argument type="service" id="vaderlab.eav.core.service.reflection.class_metadata_resolver" />
+            <argument type="service" id="vaderlab.eav.core.schema.file.schema_to_array_converter" />
+        </service>
+
+
+        <service id="vaderlab.eav.core.schema.discover.orm_schema"
+                 class="Vaderlab\EAV\Core\Schema\Discover\ORM\SchemaDiscover"
+                 lazy="true">
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="vaderlab.eav.core.schema.orm.schema_to_array_converter" />
+        </service>
+
+        <service id="vaderlab.eav.core.schema.file.schema_to_array_converter"
+                 class="Vaderlab\EAV\Core\Schema\Discover\File\SchemaToArrayConverter"
+                 lazy="true">
+            <argument type="service" id="vaderlab.eav.core.schema.file.attribute_to_array_converter" />
+        </service>
+
+        <service id="vaderlab.eav.core.schema.file.attribute_to_array_converter"
+                 class="Vaderlab\EAV\Core\Schema\Discover\File\AttributeToArrayConverter"
+                 lazy="true">
+        </service>
+
+        <service id="vaderlab.eav.core.schema.orm.schema_to_array_converter"
+                 class="Vaderlab\EAV\Core\Schema\Discover\ORM\SchemaToArrayConverter"
+                 lazy="true">
+            <argument type="service" id="vaderlab.eav.core.schema.orm.attribute_to_array_converter" />
+        </service>
+
+        <service id="vaderlab.eav.core.schema.orm.attribute_to_array_converter"
+                 class="Vaderlab\EAV\Core\Schema\Discover\ORM\AttributeToArrayConverter">
+        </service>
+
+        <service id="vaderlab.eav.core.schema.diff"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Diff"
+                 lazy="true">
+            <argument type="service" id="vaderlab.eav.core.schema.discover.orm_schema"/>
+            <argument type="service" id="vaderlab.eav.core.schema.discover.file_schema" />
         </service>
 
     </services>
