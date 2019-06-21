@@ -12,13 +12,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vaderlab\EAV\Core\Model\SchemaInterface;
 
 /**
  * @ORM\Table(name="vaderlab_eav_schema")
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\SchemaRepository")
  * @ORM\Cache(usage="READ_WRITE", region="model_type_region")
  */
-class Schema
+class Schema implements SchemaInterface
 {
     use BaseEntityTrait;
 

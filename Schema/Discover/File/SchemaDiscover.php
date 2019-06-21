@@ -4,8 +4,10 @@
 namespace Vaderlab\EAV\Core\Schema\Discover\File;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Vaderlab\EAV\Core\Annotation\Id;
-use Vaderlab\EAV\Core\Schema\Discover\SchemaToArrayConverter;
+use Vaderlab\EAV\Core\Model\SchemaInterface;
 use Vaderlab\EAV\Core\Reflection\EntityClassMetaResolver;
 use Vaderlab\EAV\Core\Reflection\Reflection;
 use Vaderlab\EAV\Core\Schema\Discover\SchemaDiscoverInterface;
@@ -27,11 +29,6 @@ class SchemaDiscover implements SchemaDiscoverInterface
     private $classMetaResolver;
 
     /**
-     * @var SchemaToArrayConverter
-     */
-    private $schemaToArrayConverter;
-
-    /**
      * FileSchema constructor.
      * @param ProtectedSchemasDiscovery $schemasDiscovery
      * @param Reflection $reflection
@@ -40,19 +37,17 @@ class SchemaDiscover implements SchemaDiscoverInterface
     public function __construct(
         ProtectedSchemasDiscovery $schemasDiscovery,
         Reflection $reflection,
-        EntityClassMetaResolver $classMetaResolver,
-        SchemaToArrayConverter $schemaToArrayConverter
+        EntityClassMetaResolver $classMetaResolver
     ) {
         $this->schemasDiscovery = $schemasDiscovery;
         $this->reflection = $reflection;
         $this->classMetaResolver = $classMetaResolver;
-        $this->schemaToArrayConverter = $schemaToArrayConverter;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getSchema(): array
+    public function getSchemes(): Collection
     {
         return $this->getSchemasClasses();
     }
@@ -64,21 +59,21 @@ class SchemaDiscover implements SchemaDiscoverInterface
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
-    protected function getSchemasClasses()
+    protected function getSchemasClasses(): ArrayCollection
     {
         $classes = $this->schemasDiscovery->discover();
 
         $app = $classes['app'];
         $vendors = $classes['vendor'];
 
-        $schema = [];
+        $schema = new ArrayCollection();
         foreach ($app as $entityClass) {
-            $this->pushToSchemaArray($entityClass, $schema);
+            $schema->add($this->generateEntitySchema($entityClass));
         }
 
         foreach ($vendors as $vendor) {
-            foreach ($vendor as $class) {
-                $this->pushToSchemaArray($class, $schema);
+            foreach ($vendor as $entityClass) {
+                $schema->add($this->generateEntitySchema($entityClass));
             }
         }
 
@@ -87,50 +82,24 @@ class SchemaDiscover implements SchemaDiscoverInterface
 
     /**
      * @param string $class
-     * @param array $output
+     * @return Schema
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
-    protected function pushToSchemaArray(string $class, array &$output)
+    protected function generateEntitySchema(string $class): SchemaInterface
     {
-        $output[] = $this->generateEntitySchema($class);
-    }
+        $refClass               = $this->reflection->createReflectionClass($class);
+        $attributeSchema        = new ArrayCollection($this->classMetaResolver->getProtectedAttributes($refClass));
+        $protectedAnnotation    = $this->classMetaResolver->getProtectedEntityAnnotation($class);
+        $schemaName             = $protectedAnnotation->name ?: $refClass->getShortName();
 
-    /**
-     * @param string $class
-     * @return array
-     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
-     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
-     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
-     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
-     */
-    protected function generateEntitySchema(string $class): array
-    {
-        $refClass = $this->reflection->createReflectionClass($class);
-        $attributeSchema = $this->classMetaResolver->getProtectedAttributes($refClass);
-        $this->classMetaResolver->getProtectedAttributes($refClass);
 
-        $protectedAnnotation = $this->classMetaResolver->getProtectedEntityAnnotation($class);
-        $schemaName = $protectedAnnotation->name ?: $refClass->getShortName();
+        $attributes = $attributeSchema->filter(function ($attribute) {
+            return !($attribute instanceof Id);
+        });
 
-        for ($i = 0; $i < count($attributeSchema); ++$i) {
-            $attr = $attributeSchema[$i];
-
-            if($attr instanceof Id) {
-                unset($attributeSchema[$i]);
-            }
-        }
-
-        $this->schemaToArrayConverter->loadSchema([
-            'class' => $class,
-            'attributes'    => $attributeSchema,
-            'name'  => $schemaName,
-        ]);
-
-        $schema = $this->schemaToArrayConverter->convert();
-
-        return $schema;
+        return new FileSchema($schemaName, $class, $attributes);
     }
 }

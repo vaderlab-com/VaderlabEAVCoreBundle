@@ -11,6 +11,7 @@ namespace Vaderlab\EAV\Core\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vaderlab\EAV\Core\Model\AttributeInterface;
 
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      @ORM\UniqueConstraint(name="attribute", columns={"name", "schema_id"})
  * })
  */
-class Attribute
+class Attribute implements AttributeInterface
 {
     use BaseEntityTrait;
 
@@ -259,7 +260,7 @@ class Attribute
      * @param String $defaultValue
      * @return Attribute
      */
-    public function setDefaultValue(String $defaultValue = ''): Attribute
+    public function setDefaultValue(?string $defaultValue = ''): Attribute
     {
         $this->defaultValue = $defaultValue;
 

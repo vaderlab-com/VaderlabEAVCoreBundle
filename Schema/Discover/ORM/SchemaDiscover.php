@@ -4,38 +4,39 @@
 namespace Vaderlab\EAV\Core\Schema\Discover\ORM;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Vaderlab\EAV\Core\Entity\Schema;
+use Vaderlab\EAV\Core\Model\SchemaInterface;
 use Vaderlab\EAV\Core\Schema\Discover\SchemaDiscoverInterface;
 
 class SchemaDiscover implements SchemaDiscoverInterface
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
-    private $converter;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        SchemaToArrayConverter $converter
-    ) {
+    /**
+     * SchemaDiscover constructor.
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         $this->entityManager = $entityManager;
-        $this->converter = $converter;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getSchema(): array
+    public function getSchemes(): Collection
     {
         $schemaRepository = $this->entityManager->getRepository(Schema::class);
-        $allSchemas = $schemaRepository->findAll();
-        $result = [];
-        /** @var Schema $schema */
-        foreach ($allSchemas as $schema) {
-            $this->converter->loadSchema($schema);
-            $result[] = $this->converter->convert();
-        }
+        $schemes = new ArrayCollection($schemaRepository->findAll());
 
-        return $result;
+        return $schemes->filter(function (SchemaInterface $schema) {
+            return !!$schema->getEntityClass();
+        });
     }
 }

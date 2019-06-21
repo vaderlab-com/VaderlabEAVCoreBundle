@@ -8,6 +8,7 @@
         <import resource="reflection.xml"/>
         <import resource="orm.xml" />
         <import resource="command.xml"/>
+        <import resource="schema_migration.xml"/>
         <import resource="schema_discovery.xml"/>
     </imports>
 

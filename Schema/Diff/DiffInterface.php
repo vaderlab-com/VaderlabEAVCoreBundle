@@ -4,7 +4,7 @@
 namespace Vaderlab\EAV\Core\Schema\Diff;
 
 
-interface DiffInterface
+    interface DiffInterface
 {
     const SCHEMA_CREATE     = 'schema_create';
 

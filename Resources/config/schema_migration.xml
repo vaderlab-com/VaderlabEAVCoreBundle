@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults autowire="true" autoconfigure="true" public="false"/>
+
+        <!-- SCHEMA ATTRIBUTES -->
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.unique"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">unique</argument>
+            <argument key="$getter">isUnique</argument>
+            <argument key="$setter">setIsUnique</argument>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.indexable"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">indexable</argument>
+            <argument key="$getter">isIndexable</argument>
+            <argument key="$setter">setIndexable</argument>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.nullable"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">nullable</argument>
+            <argument key="$getter">isNullable</argument>
+            <argument key="$setter">setNullable</argument>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.name"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">name</argument>
+            <argument key="$getter">getName</argument>
+            <argument key="$setter">setName</argument>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.type"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">type</argument>
+            <argument key="$getter">getType</argument>
+            <argument key="$setter">setType</argument>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.length"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">length</argument>
+            <argument key="$getter">getLength</argument>
+            <argument key="$setter">setLength</argument>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.description"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">description</argument>
+            <argument key="$getter">getDescription</argument>
+            <argument key="$setter">setDescription</argument>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.default"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">default</argument>
+            <argument key="$getter">getDefaultValue</argument>
+            <argument key="$setter">setDefaultValue</argument>
+        </service>
+
+        <service id="vaderlab.eav.core.schema.diff.comparison.attribute_property_proxy_factory"
+
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxyFactory"
+                 lazy="true">
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.unique"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.nullable"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.indexable"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.name"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.length"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.description"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.default"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.type"/>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.attribute_compare_processor"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\AttributeCompareProcessor"
+                 lazy="true">
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.attribute_property_proxy_factory"/>
+        </service>
+
+        <!-- END SCHEMA ATTRIBUTES -->
+
+
+
+
+
+        <!-- SCHEMA -->
+
+        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.schema.name"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
+                 lazy="true">
+            <argument key="$alias">name</argument>
+            <argument key="$getter">getName</argument>
+            <argument key="$setter">setName</argument>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.schema_property_proxy_factory"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxyFactory"
+                 lazy="true">
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.schema.name"/>
+        </service>
+        <service id="vaderlab.eav.core.schema.diff.comparison.schema_compare_processor"
+                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\SchemaCompareProcessor"
+                 lazy="true">
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.attribute_compare_processor"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.schema_property_proxy_factory"/>
+        </service>
+
+        <!-- END SCHEMA -->
+
+
+    </services>
+</container>
