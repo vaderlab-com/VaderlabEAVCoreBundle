@@ -5,11 +5,7 @@
         http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="Vaderlab\EAV\Core\Command\SchemaUpdateCommand">
-            <argument type="service" id="vaderlab.eav.core.schema.discover.orm_schema" />
-            <argument type="service" id="vaderlab.eav.core.schema.discover.file_schema" />
-            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.attribute_compare_processor"/>
-            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.schema_compare_processor"/>
-            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="vaderlab.eav.core.schema.diff" />
             <tag name="console.command" command="vaderlab:eav:schema-update" />
         </service>
     </services>

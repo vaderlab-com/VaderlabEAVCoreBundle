@@ -4,42 +4,36 @@
 namespace Vaderlab\EAV\Core\Command;
 
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Vaderlab\EAV\Core\Model\AttributeInterface;
-use Vaderlab\EAV\Core\Model\SchemaInterface;
-use Vaderlab\EAV\Core\Schema\Diff\Comparison\AttributeCompareProcessor;
-use Vaderlab\EAV\Core\Schema\Diff\Comparison\SchemaCompareProcessor;
-use Vaderlab\EAV\Core\Schema\Discover\SchemaDiscoverInterface;
+use Vaderlab\EAV\Core\Schema\Diff\Diff;
 
 class SchemaUpdateCommand extends Command
 {
-    private $dbDiscover;
 
-    private $fsDiscover;
+    const OPTION_SCHEMA_UPDATE          = 'force';
+    const OPTION_SCHEMA_UPDATE_SHORT    = 'f';
+    const OPTION_DUMP                   = 'dump';
+    const OPTION_DUMP_SHORT             = 'd';
 
-    private $processor;
 
-    private $processor2;
+    /**
+     * @var Diff
+     */
+    private $diffService;
 
-    private $entityManager;
-
+    /**
+     * SchemaUpdateCommand constructor.
+     * @param Diff $diffService
+     */
     public function __construct(
-        SchemaDiscoverInterface $dbDiscover ,
-        SchemaDiscoverInterface $fsDiscover,
-        AttributeCompareProcessor $processor,
-        SchemaCompareProcessor $processor2,
-        EntityManagerInterface $entityManager
+        Diff $diffService
     ) {
         parent::__construct();
 
-        $this->dbDiscover = $dbDiscover;
-        $this->fsDiscover = $fsDiscover;
-        $this->processor = $processor;
-        $this->processor2 = $processor2;
-        $this->entityManager = $entityManager;
+        $this->diffService = $diffService;
     }
 
     /**
@@ -50,6 +44,19 @@ class SchemaUpdateCommand extends Command
         $this
             // the short description shown while running "php bin/console list"
             ->setDescription('Update EAV schema')
+            ->addOption(
+                self::OPTION_SCHEMA_UPDATE,
+                'f',
+                InputOption::VALUE_NONE,
+                ''
+            )
+            ->addOption(
+                self::OPTION_DUMP,
+                self::OPTION_DUMP_SHORT,
+                InputOption::VALUE_OPTIONAL,
+                '',
+                true
+            )
             // the full command description shown when running the command with
             // the "--help" option
             ->setHelp('Synchronization of database schema based on models in code');
@@ -61,39 +68,15 @@ class SchemaUpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        $callable = function (SchemaInterface $sch) {
-            return $sch->getEntityClass() === 'App\Entity\User';
-        };
+        $isDump     = $input->getOption(self::OPTION_DUMP);
+        $isUpdate   = $input->getOption(self::OPTION_SCHEMA_UPDATE);
+        $diffArray  = $this->diffService->diff($isUpdate);
 
-        $fsSch = $this->fsDiscover->getSchemes()->filter($callable)->first();
-        $dbSch = $this->dbDiscover->getSchemes()->filter($callable)->first();
+        if(!$isDump) {
+            return;
+        }
 
-        //dump($this->fsDiscover->getSchemes());
-        //exit;
-
-
-        /*
-        $callable = function (AttributeInterface $attr){
-            return $attr->getName() === 'birthday';
-        };
-
-        $fsAttr = $fsSch->getAttributes()->filter($callable)->first();
-        $dbAttr  = $dbSch->getAttributes()->filter($callable)->first();
-        */
-
-        //$diff = $this->processor->process($dbAttr, $fsAttr);
-
-        $diff = $this->processor2->process($dbSch, $fsSch, true);
-
-        $this->entityManager->persist($dbSch);
-        $this->entityManager->flush();
-
-        dump($diff);
-
-
-        //dump($this->fsDiscover->getSchemes());
-
-
-        //dump($diff);
+        $output->writeln('<bg=green;options=bold>DIFF CHANGES</>');
+        dump($diffArray);
     }
 }

@@ -4,12 +4,14 @@
 namespace Vaderlab\EAV\Core\Schema\Diff;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use function foo\func;
 use Vaderlab\EAV\Core\Entity\Schema;
 use Vaderlab\EAV\Core\Model\SchemaInterface;
 use Vaderlab\EAV\Core\Repository\SchemaRepository;
+use Vaderlab\EAV\Core\Schema\Diff\Comparison\SchemaCompareProcessor;
 use Vaderlab\EAV\Core\Schema\Discover\SchemaDiscoverInterface;
 
 /**
@@ -36,19 +38,28 @@ class Diff implements DiffInterface
     private $entityManager;
 
     /**
+     * @var SchemaCompareProcessor
+     */
+    private $schemaCompareProcessor;
+
+    /**
      * Diff constructor.
      * @param SchemaDiscoverInterface $dbDiscover
      * @param SchemaDiscoverInterface $fsDiscover
+     * @param SchemaCompareProcessor $schemaCompareProcessor
+     * @param EntityManagerInterface $entityManager
      */
     public function __construct(
         SchemaDiscoverInterface $dbDiscover,
         SchemaDiscoverInterface $fsDiscover,
+        SchemaCompareProcessor $schemaCompareProcessor,
         EntityManagerInterface $entityManager
     )
     {
         $this->dbDiscover = $dbDiscover;
         $this->fsDiscover = $fsDiscover;
         $this->entityManager = $entityManager;
+        $this->schemaCompareProcessor = $schemaCompareProcessor;
     }
 
     /**
@@ -69,19 +80,24 @@ class Diff implements DiffInterface
         foreach ($fsSchemas as $fsSchema) {
             $currentSchemaClass  = $fsSchema->getEntityClass();
             $dbSchema            = $dbSchemas->filter($filter)->first();
-
             if(!$dbSchema) {
-                continue;
                 $dbSchema = $this->createNewSchema($fsSchema->getName());
             }
 
+            $tmpDiff = $this->schemaCompareProcessor->process($dbSchema, $fsSchema, $apply);
+            if(!count($tmpDiff)) {
+                continue;
+            }
+
+            if($apply) {
+                $this->entityManager->persist($dbSchema);
+                $this->entityManager->flush();
+            }
+
+            $diff[$currentSchemaClass] = $tmpDiff;
         }
 
-    }
-
-    protected function diffSchema()
-    {
-
+        return $diff;
     }
 
     /**
@@ -90,7 +106,7 @@ class Diff implements DiffInterface
      */
     protected function createNewSchema(string $name): Schema
     {
-        $this->getSchemaRepository()->createSchema($name, []);
+        $this->getSchemaRepository()->createSchema($name, new ArrayCollection([]));
     }
 
     /**

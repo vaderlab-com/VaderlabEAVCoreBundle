@@ -82,15 +82,9 @@
                  lazy="true">
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.attribute_property_proxy_factory"/>
         </service>
-
         <!-- END SCHEMA ATTRIBUTES -->
 
-
-
-
-
         <!-- SCHEMA -->
-
         <service id="vaderlab.eav.core.schema.diff.comparison.proxy.schema.name"
                  class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
                  lazy="true">
@@ -109,9 +103,15 @@
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.attribute_compare_processor"/>
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.schema_property_proxy_factory"/>
         </service>
-
         <!-- END SCHEMA -->
 
+        <!-- SCHEMA DIFFERENCE SERVICE -->
+        <service id="vaderlab.eav.core.schema.diff" class="Vaderlab\EAV\Core\Schema\Diff\Diff">
+            <argument type="service" id="vaderlab.eav.core.schema.discover.orm_schema" />
+            <argument type="service" id="vaderlab.eav.core.schema.discover.file_schema" />
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.schema_compare_processor"/>
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
 
     </services>
 </container>
