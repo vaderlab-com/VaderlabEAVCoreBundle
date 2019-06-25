@@ -14,13 +14,6 @@
             <argument key="$getter">isUnique</argument>
             <argument key="$setter">setIsUnique</argument>
         </service>
-        <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.indexable"
-                 class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
-                 lazy="true">
-            <argument key="$alias">indexable</argument>
-            <argument key="$getter">isIndexable</argument>
-            <argument key="$setter">setIndexable</argument>
-        </service>
         <service id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.nullable"
                  class="Vaderlab\EAV\Core\Schema\Diff\Comparison\PropertyProxy"
                  lazy="true">
@@ -70,7 +63,6 @@
                  lazy="true">
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.unique"/>
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.nullable"/>
-            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.indexable"/>
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.name"/>
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.length"/>
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.proxy.attribute.description"/>

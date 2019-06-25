@@ -39,10 +39,6 @@ class Attribute extends BaseAttribute implements AttributeInterface
      * @var boolean
      */
     public $nullable = false;
-    /**
-     * @var boolean
-     */
-    public $indexable = false;
 
     /**
      * @var boolean

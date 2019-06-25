@@ -67,16 +67,6 @@ class Attribute implements AttributeInterface
     /**
      * @var boolean
      * @ORM\Column(
-     *     name="indexable",
-     *     type="boolean",
-     *     nullable=false
-     * )
-     */
-    private $indexable = false;
-
-    /**
-     * @var boolean
-     * @ORM\Column(
      *     name="is_unique",
      *     type="boolean",
      *     nullable=false
@@ -176,25 +166,6 @@ class Attribute implements AttributeInterface
     public function setNullable(bool $nullable): Attribute
     {
         $this->nullable = $nullable;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isIndexable(): bool
-    {
-        return $this->indexable;
-    }
-
-    /**
-     * @param bool $indexable
-     * @return $this
-     */
-    public function setIndexable(bool $indexable): Attribute
-    {
-        $this->indexable = $indexable;
 
         return $this;
     }

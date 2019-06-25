@@ -21,11 +21,6 @@ interface AttributeInterface
     public function isNullable(): bool;
 
     /**
-     * @return bool
-     */
-    public function isIndexable(): bool;
-
-    /**
      * @return int
      */
     public function getLength(): ?int;
