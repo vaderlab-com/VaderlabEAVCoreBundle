@@ -5,6 +5,7 @@ namespace Vaderlab\EAV\Core\Entity\ValueType;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vaderlab\EAV\Core\Entity\AbstractValue;
 
 /**
  * Class ValueEmail
@@ -12,14 +13,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
-class ValueEmail extends ValueString
+class ValueEmail extends AbstractValue
 {
     /**
-     * @var float
+     * @var string
      * @ORM\Column( name="val", type="string", nullable=true)
      * @Assert\Email(
      *     message = "The value '{{ value }}' is not a valid email."
      * )
      */
     protected $value;
+
+    /**
+     * @return string
+     */
+    public function getCastType(): string
+    {
+        return 'string';
+    }
 }

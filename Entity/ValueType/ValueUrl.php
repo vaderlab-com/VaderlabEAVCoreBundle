@@ -5,6 +5,8 @@ namespace Vaderlab\EAV\Core\Entity\ValueType;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Vaderlab\EAV\Core\Entity\AbstractValue;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ValueUrl
@@ -12,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
-class ValueUrl extends ValueString
+class ValueUrl extends AbstractValue
 {
     /**
      * @var float
@@ -24,4 +26,12 @@ class ValueUrl extends ValueString
      * )
      */
     protected $value;
+
+    /**
+     * @return string
+     */
+    public function getCastType(): string
+    {
+        return 'string';
+    }
 }

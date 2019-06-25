@@ -52,7 +52,7 @@ class EntityValueValidatorService implements EntityValueValidatorServiceInterfac
      */
     public function validateIsNullable(AbstractValue $valueObj, Attribute $attribute)
     {
-        if(!$valueObj->getValue() && !$attribute->isNullable()) {
+        if($valueObj->getValue() === null && !$attribute->isNullable()) {
             throw new ValueCanNotBeNullException($attribute->getName());
         }
     }

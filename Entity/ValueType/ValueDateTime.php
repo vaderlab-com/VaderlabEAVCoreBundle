@@ -3,6 +3,7 @@
 
 namespace Vaderlab\EAV\Core\Entity\ValueType;
 use Doctrine\ORM\Mapping as ORM;
+use Vaderlab\EAV\Core\Entity\AbstractValue;
 
 /**
  * Class ValueDateTime
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Cache(usage="READ_WRITE", region="value_region")
  */
-class ValueDateTime extends ValueDate
+class ValueDateTime extends AbstractValue
 {
     /**
      * @var \DateTime|null
@@ -29,5 +30,13 @@ class ValueDateTime extends ValueDate
         }
 
         return $v->format(DATE_ISO8601);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCastType(): string
+    {
+        return \DateTime::class;
     }
 }

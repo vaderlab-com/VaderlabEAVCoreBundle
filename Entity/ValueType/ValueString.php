@@ -26,7 +26,6 @@ class ValueString extends AbstractValue implements ValueTypeHasDefaultInterface
      */
     protected $value = '';
 
-
     /**
      * @return string
      */

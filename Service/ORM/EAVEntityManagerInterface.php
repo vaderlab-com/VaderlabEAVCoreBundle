@@ -4,19 +4,21 @@
 namespace Vaderlab\EAV\Core\Service\ORM;
 
 
+use Doctrine\ORM\EntityManagerInterface;
+
 interface EAVEntityManagerInterface
 {
     /**
      * @param object $object
      * @return void
      */
-    public function persist(object $object);
+    public function persist($object);
 
     /**
      * @param object $object
      * @return void
      */
-    public function detach(object $object);
+    public function detach($object);
 
     /**
      * @return void
@@ -27,12 +29,12 @@ interface EAVEntityManagerInterface
      * @param object $object
      * @return void
      */
-    public function refresh(object $object);
+    public function refresh($object);
 
     /**
      * @param object $object
      * @return void
      */
-    public function remove(object $object);
+    public function remove($object);
 
 }
