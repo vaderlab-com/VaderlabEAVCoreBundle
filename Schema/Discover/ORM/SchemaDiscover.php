@@ -39,4 +39,15 @@ class SchemaDiscover implements SchemaDiscoverInterface
             return !!$schema->getEntityClass();
         });
     }
+
+    /**
+     * @param string $classname
+     * @return SchemaInterface
+     */
+    public function getSchemaByClass(string $classname): SchemaInterface
+    {
+        return $this->entityManager->getRepository(Schema::class)->findOneBy([
+            'entityClass' => $classname,
+        ]);
+    }
 }

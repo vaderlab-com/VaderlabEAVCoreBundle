@@ -15,8 +15,14 @@
     <services>
         <defaults autowire="true" autoconfigure="true" public="false"/>
 
-        <service id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" public="false">
+        <service id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService">
             <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="Vaderlab\EAV\Core\Subscriber\Attribute\AttributeUpdateSubscriber">
+            <tag name="doctrine.event_subscriber" connection="default"/>
+            <argument type="service" id="vaderlab.eav.core.schema.discover.file_schema" />
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.attribute_compare_processor"/>
         </service>
 
         <service id="Vaderlab\EAV\Core\Subscriber\Entity\ValueValidationSubscriber">

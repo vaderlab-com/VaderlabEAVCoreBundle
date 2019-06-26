@@ -7,6 +7,7 @@ namespace Vaderlab\EAV\Core\Schema\Discover\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Vaderlab\EAV\Core\Annotation\Id;
+use Vaderlab\EAV\Core\Entity\Schema;
 use Vaderlab\EAV\Core\Model\SchemaInterface;
 use Vaderlab\EAV\Core\Reflection\EntityClassMetaResolver;
 use Vaderlab\EAV\Core\Reflection\Reflection;
@@ -50,6 +51,19 @@ class SchemaDiscover implements SchemaDiscoverInterface
     public function getSchemes(): Collection
     {
         return $this->getSchemasClasses();
+    }
+
+    /**
+     * @param string $classname
+     * @return Schema
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
+     */
+    public function getSchemaByClass(string $classname): SchemaInterface
+    {
+        return $this->generateEntitySchema($classname);
     }
 
     /**

@@ -11,6 +11,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Vaderlab\EAV\Core\Entity\Entity;
 use Vaderlab\EAV\Core\Reflection\ClassToEntityResolver;
 use Vaderlab\EAV\Core\Reflection\EntityToClassResolver;
+use Vaderlab\EAV\Core\Repository\EntityRepository;
 
 /**
  * @method Mapping\ClassMetadata getClassMetadata($className)
@@ -60,7 +61,7 @@ class EntityManager implements EAVEntityManagerInterface
     public function find($entityName, $id)
     {
         if(!$this->isEavEntityClass($entityName)) {
-            $this->entityManager->find($entityName, $id);
+            return $this->entityManager->find($entityName, $id);
         }
 
         $repository = $this->getEntityRepository();
@@ -84,6 +85,12 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function persist($entity): void
     {
+        if(!$this->isEAVEntity($entity)) {
+            $this->entityManager->persist($entity);
+
+            return;
+        }
+
         $this->entityManager->persist($this->resolveEAVEntity($entity));
     }
 
@@ -97,6 +104,12 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function detach($entity): void
     {
+        if(!$this->isEAVEntity($entity)) {
+            $this->entityManager->detach($entity);
+
+            return;
+        }
+
         $this->entityManager->detach($this->resolveEAVEntity($entity));
     }
 
@@ -122,6 +135,12 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function remove($object): void
     {
+        if(!$this->isEAVEntity($object)) {
+            $this->entityManager->remove($object);
+
+            return;
+        }
+
         $this->entityManager->remove($this->resolveEAVEntity($object));
     }
 
@@ -135,6 +154,12 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function refresh($object): void
     {
+        if(!$this->isEAVEntity($object)) {
+            $this->entityManager->refresh($object);
+
+            return;
+        }
+
         $this->entityManager->refresh($this->resolveEAVEntity($object));
     }
 
@@ -149,6 +174,12 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function contains($object)
     {
+        if(!$this->isEAVEntity($object)) {
+            $this->entityManager->contains($object);
+
+            return;
+        }
+
         return $this->entityManager->contains($this->resolveEAVEntity($object));
     }
 
@@ -162,6 +193,12 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function initializeObject($object)
     {
+        if(!$this->isEAVEntity($object)) {
+            $this->entityManager->initializeObject($object);
+
+            return;
+        }
+
         $this->entityManager->initializeObject($this->resolveEAVEntity($object));
     }
 
@@ -191,7 +228,7 @@ class EntityManager implements EAVEntityManagerInterface
      * @param string $classname
      * @return bool
      */
-    protected function isEavEntityClass(string $classname)
+    protected function isEavEntityClass(string $classname): bool
     {
         $repository = $this->getEntityRepository();
         $qb         = $repository->createQueryBuilder('q');
@@ -208,9 +245,18 @@ class EntityManager implements EAVEntityManagerInterface
     }
 
     /**
+     * @param object $object
+     * @return bool
+     */
+    protected function isEAVEntity(object $object): bool
+    {
+        return $this->isEavEntityClass(get_class($object));
+    }
+
+    /**
      * @return \Doctrine\Common\Persistence\ObjectRepository|\Vaderlab\EAV\Core\Repository\EntityRepository
      */
-    protected function getEntityRepository()
+    protected function getEntityRepository(): EntityRepository
     {
         return $this->entityManager->getRepository(Entity::class);
     }
