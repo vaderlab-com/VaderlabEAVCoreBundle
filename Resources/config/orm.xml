@@ -21,6 +21,9 @@
             <argument type="service" id="Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy"/>
         </service>
 
+        <service class="Vaderlab\EAV\Core\Service\Schema\SchemaManager" id="vaderlab.eav.schema_resolver">
+        </service>
+
         <service class="Vaderlab\EAV\Core\Service\Entity\EntityServiceORM"
                  id="vaderlab.eav.entity_resolver"
                  public="true">

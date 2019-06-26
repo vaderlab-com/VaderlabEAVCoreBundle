@@ -5,6 +5,7 @@ Create, Update, Delete and get/set values
 # Create new Entity
 
 ```php
+
 <?php
 
 $em = $this->get('doctrine.orm.entity_manager');
@@ -34,5 +35,4 @@ foreach($attributes as $attribute => $value) {
 // Persist and flush
 $em->persist($entity);
 $em->flush();
-
 ```

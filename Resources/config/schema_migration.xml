@@ -103,6 +103,7 @@
             <argument type="service" id="vaderlab.eav.core.schema.discover.file_schema" />
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.schema_compare_processor"/>
             <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="vaderlab.eav.schema_resolver" />
         </service>
 
     </services>

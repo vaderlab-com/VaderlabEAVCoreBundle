@@ -2,10 +2,9 @@
 
 Protected attributes can not update and delete.
 
-When user try update or delete this attributes from database,
-it is throw exceptions: 
-  * [ProtectedAttributeUpdateDeniedException](Exception/Attribute/ProtectedAttributeUpdateDeniedException.php)
-  * [ProtectedAttributeRemoveDeniedException](Exception/Attribute/ProtectedAttributeRemoveDeniedException.php)
+When user try update or delete this attributes from database, it is throw exceptions: 
+  * [ProtectedAttributeUpdateDeniedException](https://github.com/vaderlab-com/VaderlabEAVBundle/blob/master/Exception/Attribute/ProtectedAttributeUpdateDeniedException.php)
+  * [ProtectedAttributeRemoveDeniedException](https://github.com/vaderlab-com/VaderlabEAVBundle/blob/master/Exception/Attribute/ProtectedAttributeRemoveDeniedException.php)
 
 
 ## Basic usage
@@ -13,8 +12,13 @@ it is throw exceptions:
 Create new schema class
 ```php
 <?php 
+
+
 use Vaderlab\EAV\Core\Annotation as EAV;
 
+/**
+ * @EAV\ProtectedEntity(name="User")
+ */
 class User
 {
     /**
