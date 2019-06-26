@@ -11,13 +11,37 @@ use Vaderlab\EAV\Core\Entity\Schema;
 
 interface EntityServiceInterface
 {
+    /**
+     * @param Schema $schema
+     * @return Entity
+     */
     public function createEntity(Schema $schema): Entity;
 
-    public function setValue(Entity $entity, String $attribute, $value);
+    /**
+     * @param $entity
+     * @param String $attribute
+     * @param $value
+     * @return mixed
+     */
+    public function setValue($entity, String $attribute, $value);
 
-    public function getValue(Entity $entity, String $attribute);
+    /**
+     * @param $entity
+     * @param String $attribute
+     * @return mixed
+     */
+    public function getValue($entity, String $attribute);
 
-    public function getValueByAttribute(Entity $entity, Attribute $attribute);
+    /**
+     * @param $entity
+     * @param Attribute $attribute
+     * @return mixed
+     */
+    public function getValueByAttribute($entity, Attribute $attribute);
 
-    public function getValuesArray(Entity $entity): array;
+    /**
+     * @param $entity
+     * @return array
+     */
+    public function getValuesArray($entity): array;
 }

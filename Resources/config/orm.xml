@@ -6,7 +6,7 @@
 
     <parameters>
         <!-- services -->
-        <parameter key="vaderlab.eav.core.service.entity.entity_service.id" >vaderlab.eav.core.service.entity.entity_service_orm</parameter>
+        <parameter key="vaderlab.eav.core.service.entity.entity_service.id" >vaderlab.eav.entity_resolver</parameter>
         <!-- end services -->
     </parameters>
 
@@ -22,17 +22,21 @@
             <argument type="service" id="Vaderlab\EAV\Core\Service\ORM\EntityManager.inner"/>
             <argument type="service" id="vaderlab.eav.core.service.reflection.class_to_entity_resolver" />
             <argument type="service" id="vaderlab.eav.core.service.reflection.entity_to_class_resolver" />
+            <argument type="service" id="Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy"/>
         </service>
 
         <service class="Vaderlab\EAV\Core\Service\Entity\EntityServiceORM"
-                 id="vaderlab.eav.core.service.entity.entity_service_orm">
-            <argument type="service" id="doctrine" />
+                 id="vaderlab.eav.entity_resolver"
+                 public="true">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
             <argument type="service" id="vaderlab.eav.core.service.data_type.data_type_provider" />
+            <argument type="service" id="vaderlab.eav.core.service.reflection.class_to_entity_resolver" />
             <argument type="string">Vaderlab\EAV\Core\Entity\Entity</argument>
         </service>
 
-        <service id="Vaderlab\EAV\Core\Service\Entity\EntityServiceFactory" public="true">
-            <argument type="service" id="vaderlab.eav.core.service.entity.entity_service_orm" />
+        <service id="Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy">
+            <argument type="service" id="service_container" />
+            <argument key="$entityService" type="string">vaderlab.eav.entity_resolver</argument>
         </service>
 
     </services>

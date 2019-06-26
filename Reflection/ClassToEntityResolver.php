@@ -16,7 +16,9 @@ use \ReflectionObject;
 use \ReflectionException;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException;
 use Vaderlab\EAV\Core\Model\EntityInterface;
+use Vaderlab\EAV\Core\Service\Entity\EntityServiceFactory;
 use Vaderlab\EAV\Core\Service\Entity\EntityServiceORM;
+use Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy;
 
 class ClassToEntityResolver
 {
@@ -42,6 +44,11 @@ class ClassToEntityResolver
     private $entityService;
 
     /**
+     * @var EntityServiceProxy
+     */
+    private $entityServiceProxy;
+
+    /**
      * @var EntityClassMetaResolver
      */
     private $metaResolver;
@@ -50,17 +57,17 @@ class ClassToEntityResolver
      * ClassToEntityResolver constructor.
      * @param RegistryInterface $doctrine
      * @param Reflection $reflection
-     * @param EntityServiceORM $entityService
+     * @param EntityServiceProxy $entityService
      */
     public function __construct(
         RegistryInterface $doctrine,
         Reflection $reflection,
-        EntityServiceORM $entityService,
+        EntityServiceProxy $entityServiceProxy,
         EntityClassMetaResolver $metaResolver
     ) {
         $this->doctrine         = $doctrine;
         $this->reflection       = $reflection;
-        $this->entityService    = $entityService;
+        $this->entityServiceProxy    = $entityServiceProxy;
         $this->schemaRepository = $doctrine->getRepository(Schema::class);
         $this->entityRepository = $doctrine->getRepository(Entity::class);
         $this->metaResolver     = $metaResolver;
@@ -78,7 +85,6 @@ class ClassToEntityResolver
     public function resolve(object $entityClass): Entity
     {
         $className          = get_class($entityClass);
-
         $schema             = $this->schemaRepository->findOneBy(['entityClass' => $className]);
 
         $reflectionObject   = $this->reflection->createReflectionObject($entityClass);
@@ -102,10 +108,22 @@ class ClassToEntityResolver
             $attrName   = $attribute->name;
             $value      = $this->reflection->getReflectionAttributeValue($reflectionObject, $entityClass, $attrTarget);
 
-            $this->entityService->setValue($entity, $attrName, $value);
+            $this->getEntityService()->setValue($entity, $attrName, $value);
         }
 
         return $entity;
+    }
+
+    /**
+     * @return \Vaderlab\EAV\Core\Service\Entity\EntityServiceInterface|EntityServiceORM
+     */
+    protected function getEntityService()
+    {
+        if(!$this->entityService) {
+            return $this->entityService = $this->entityServiceProxy->getService();
+        }
+
+        return $this->entityService;
     }
 
     /**

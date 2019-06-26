@@ -17,7 +17,7 @@
         <!-- end value type -->
 
         <!-- services -->
-        <parameter key="vaderlab.eav.core.service.entity.entity_service.id" >vaderlab.eav.core.service.entity.entity_service_orm</parameter>
+        <parameter key="vaderlab.eav.core.service.entity.entity_service.id" >vaderlab.eav.entity_resolver</parameter>
         <!-- end services -->
     </parameters>
 
