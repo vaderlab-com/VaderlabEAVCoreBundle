@@ -11,10 +11,6 @@
     </parameters>
 
     <services>
-        <!--
-        <service id="doctrine.orm.default_entity_manager" alias="Vaderlab\EAV\Core\Service\ORM\EntityManager">
-        </service>
-        -->
         <service id="Vaderlab\EAV\Core\Service\ORM\EntityManager"
                  public="true"
                  decorates="doctrine.orm.entity_manager"

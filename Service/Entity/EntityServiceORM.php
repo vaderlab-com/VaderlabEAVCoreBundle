@@ -31,10 +31,6 @@ class EntityServiceORM implements EntityServiceInterface
      */
     private $dataTypeProvider;
     /**
-     * @var EntityRepository
-     */
-    private $repository;
-    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
@@ -64,7 +60,6 @@ class EntityServiceORM implements EntityServiceInterface
         $this->entityManager         = $entityManager;
         $this->dataTypeProvider      = $dataTypeProvider;
         $this->classToEntityResolver = $classToEntityResolver;
-        $this->repository            = $entityManager->getRepository($entityClass);
         $this->entityClass           = $entityClass;
     }
 
@@ -77,7 +72,8 @@ class EntityServiceORM implements EntityServiceInterface
      */
     public function createEntity(Schema $schema): Entity
     {
-        $entity = $this->repository->createEntity($schema);
+        $entity         = new Entity();
+        $entity->setSchema($schema);
 
         $attributes     = $schema->getAttributes();
         /** @var Attribute $attribute */
@@ -86,7 +82,8 @@ class EntityServiceORM implements EntityServiceInterface
         $entity->setSchema($schema);
 
         foreach ($attributes as $attribute) {
-            $entityValue = $this->initEntityValueAttributeByName($schema, $entity, $attribute->getName());
+            $entityValue = $this
+                ->initEntityValueAttributeByName($schema, $entity, $attribute->getName());
             $entityValues->add($entityValue);
         }
 

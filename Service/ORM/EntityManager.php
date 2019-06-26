@@ -5,6 +5,7 @@ namespace Vaderlab\EAV\Core\Service\ORM;
 
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\Query\Expr\Join;
@@ -57,6 +58,15 @@ class EntityManager implements EAVEntityManagerInterface
         $this->entityToClassResolver    = $entityToClassResolver;
         $this->classToEntityResolver    = $classToEntityResolver;
         $this->entityServiceProxy       = $entityServiceProxy;
+    }
+
+    /**
+     * @param string $classname
+     * @return ObjectRepository
+     */
+    public function getRepository(string $classname): ObjectRepository
+    {
+        return $this->entityManager->getRepository($classname);
     }
 
     /**
