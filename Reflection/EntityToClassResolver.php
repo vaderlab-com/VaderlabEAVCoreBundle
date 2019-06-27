@@ -10,7 +10,7 @@ use Vaderlab\EAV\Core\Annotation\Id;
 use Vaderlab\EAV\Core\Entity\Entity;
 use \ReflectionObject;
 use Vaderlab\EAV\Core\Exception\Service\Reflection\ReflectionException;
-use Vaderlab\EAV\Core\Service\Entity\EntityServiceInterface;
+use Vaderlab\EAV\Core\Service\Entity\EAVEntityManagerInterface;
 
 /**
  * Class EntityObjectResolver
@@ -19,7 +19,7 @@ use Vaderlab\EAV\Core\Service\Entity\EntityServiceInterface;
 class EntityToClassResolver
 {
     /**
-     * @var EntityServiceInterface
+     * @var EAVEntityManagerInterface
      */
     private $entityService;
 
@@ -35,12 +35,12 @@ class EntityToClassResolver
 
     /**
      * EntityToClassResolver constructor.
-     * @param EntityServiceInterface $entityService
+     * @param EAVEntityManagerInterface $entityService
      * @param Reflection $reflection
      * @param EntityClassMetaResolver $entityClassMetaResolver
      */
     public function __construct(
-        EntityServiceInterface $entityService,
+        EAVEntityManagerInterface $entityService,
         Reflection $reflection,
         EntityClassMetaResolver $entityClassMetaResolver
     ) {

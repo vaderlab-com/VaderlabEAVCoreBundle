@@ -1,26 +1,22 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Service\ORM;
+namespace Vaderlab\EAV\Core\ORM;
 
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\Mapping;
-use Doctrine\ORM\Query\Expr\Join;
 use Vaderlab\EAV\Core\Entity\Entity;
 use Vaderlab\EAV\Core\Reflection\ClassToEntityResolver;
 use Vaderlab\EAV\Core\Reflection\EntityToClassResolver;
-use Vaderlab\EAV\Core\Repository\EntityRepository;
-use Vaderlab\EAV\Core\Service\Entity\EntityServiceInterface;
-use Vaderlab\EAV\Core\Service\Entity\EntityServiceORM;
+use Vaderlab\EAV\Core\Service\Entity\EAVEntityManagerORM;
 use Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy;
 
 /**
  * @method Mapping\ClassMetadata getClassMetadata($className)
  */
-class EntityManager implements EAVEntityManagerInterface
+class EntityManager implements EntityManagerInterface
 {
     /**
      * @var ClassToEntityResolver
@@ -47,6 +43,7 @@ class EntityManager implements EAVEntityManagerInterface
      * @param ObjectManager $entityManager
      * @param ClassToEntityResolver $classToEntityResolver
      * @param EntityToClassResolver $entityToClassResolver
+     * @param EntityServiceProxy $entityServiceProxy
      */
     public function __construct(
         ObjectManager $entityManager,
@@ -56,6 +53,7 @@ class EntityManager implements EAVEntityManagerInterface
     ) {
         $this->entityManager            = $entityManager;
         $this->entityToClassResolver    = $entityToClassResolver;
+
         $this->classToEntityResolver    = $classToEntityResolver;
         $this->entityServiceProxy       = $entityServiceProxy;
     }
@@ -69,6 +67,8 @@ class EntityManager implements EAVEntityManagerInterface
         return $this->entityManager->getRepository($classname);
     }
 
+
+
     /**
      * @param $entityName
      * @param $id
@@ -80,13 +80,13 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function find($entityName, $id)
     {
-        if(!$this->getEntityService()->isEavEntityClass($entityName)) {
+        $es = $this->getEntityService();
+        if(!$es->isEavEntityClass($entityName)) {
             return $this->entityManager->find($entityName, $id);
         }
 
-        $repository = $this->getEntityService()->getEAVEntityRepository();
         /** @var Entity $result */
-        $result = $repository->find($id);
+        $result = $es->findByClassAndId($entityName, $id);
 
         if(!$result) {
             return null;
@@ -105,13 +105,7 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function persist($entity): void
     {
-        if(!$this->getEntityService()->isEAVEntity($entity)) {
-            $this->entityManager->persist($entity);
-
-            return;
-        }
-
-        $this->entityManager->persist($this->getEntityService()->resolveEAVEntity($entity));
+        $this->callAction('persist', $entity);
     }
 
     /**
@@ -124,13 +118,7 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function detach($entity): void
     {
-        if(!$this->getEntityService()->isEAVEntity($entity)) {
-            $this->entityManager->detach($entity);
-
-            return;
-        }
-
-        $this->entityManager->detach($this->getEntityService()->resolveEAVEntity($entity));
+        $this->callAction('detach', $entity);
     }
 
     /**
@@ -155,13 +143,7 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function remove($object): void
     {
-        if(!$this->getEntityService()->isEAVEntity($object)) {
-            $this->entityManager->remove($object);
-
-            return;
-        }
-
-        $this->entityManager->remove($this->getEntityService()->resolveEAVEntity($object));
+        $this->callAction('remove', $object);
     }
 
     /**
@@ -174,13 +156,7 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function refresh($object): void
     {
-        if(!$this->getEntityService()->isEAVEntity($object)) {
-            $this->entityManager->refresh($object);
-
-            return;
-        }
-
-        $this->entityManager->refresh($this->getEntityService()->resolveEAVEntity($object));
+        $this->callAction('refresh', $object);
     }
 
     /**
@@ -194,13 +170,7 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function contains($object)
     {
-        if(!$this->getEntityService()->isEAVEntity($object)) {
-            $this->entityManager->contains($object);
-
-            return;
-        }
-
-        return $this->entityManager->contains($this->getEntityService()->resolveEAVEntity($object));
+        return $this->callAction('contains', $object);
     }
 
     /**
@@ -213,20 +183,37 @@ class EntityManager implements EAVEntityManagerInterface
      */
     public function initializeObject($object)
     {
-        if(!$this->getEntityService()->isEAVEntity($object)) {
-            $this->entityManager->initializeObject($object);
-
-            return;
-        }
-
-        $this->entityManager->initializeObject($this->resolveEAVEntity($object));
+        $this->callAction('initializeObject', $object);
     }
 
     /**
-     * @return EntityServiceORM
+     * @return EAVEntityManagerORM
      */
-    protected function getEntityService(): EntityServiceORM
+    protected function getEntityService(): EAVEntityManagerORM
     {
         return $this->entityServiceProxy->getService();
+    }
+
+    /**
+     * @param string $action
+     * @param object $object
+     * @return mixed
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @throws \ReflectionException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     */
+    protected function callAction(string $action, object $object)
+    {
+        $es = $this->getEntityService();
+        $entity = $object;
+        if($es->isEAVEntity($object)) {
+            $entity = $es->resolveEAVEntity($object);
+        }
+
+        $result = call_user_func_array([$this->entityManager, $action], [$entity]);
+
+        return $result;
     }
 }

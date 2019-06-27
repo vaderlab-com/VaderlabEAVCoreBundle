@@ -21,7 +21,7 @@ use Vaderlab\EAV\Core\Entity\Entity;
 use Vaderlab\EAV\Core\Entity\Schema;
 use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
 use Vaderlab\EAV\Core\Service\DataType\DataTypeProvider;
-use Vaderlab\EAV\Core\Service\Entity\EntityServiceORM;
+use Vaderlab\EAV\Core\Service\Entity\EAVEntityManagerORM;
 use Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy;
 
 /**

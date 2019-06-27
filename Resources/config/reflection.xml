@@ -8,6 +8,13 @@
 
         <service id="vaderlab.eav.core.service.reflection.reflection" class="Vaderlab\EAV\Core\Reflection\Reflection" public="true" />
 
+        <service id="vaderlab.eav.core.service.reflection.class_metadata_resolver"
+                 class="Vaderlab\EAV\Core\Reflection\EntityClassMetaResolver"
+                 public="true" >
+            <argument type="service" id="annotations.reader" />
+            <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
+        </service>
+
         <service id="vaderlab.eav.core.service.reflection.entity_to_class_resolver"
                  class="Vaderlab\EAV\Core\Reflection\EntityToClassResolver"
                  public="true">
@@ -19,18 +26,10 @@
         <service id="vaderlab.eav.core.service.reflection.class_to_entity_resolver"
                  class="Vaderlab\EAV\Core\Reflection\ClassToEntityResolver"
                  public="true">
-            <argument type="service" id="doctrine"/>
             <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
             <argument type="service" id="Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy" />
             <argument type="service" id="vaderlab.eav.core.service.reflection.class_metadata_resolver" />
+            <argument type="service" id="vaderlab.eav.schema_resolver" />
         </service>
-
-        <service id="vaderlab.eav.core.service.reflection.class_metadata_resolver"
-                 class="Vaderlab\EAV\Core\Reflection\EntityClassMetaResolver"
-                 public="true" >
-            <argument type="service" id="annotations.reader" />
-            <argument type="service" id="vaderlab.eav.core.service.reflection.reflection" />
-        </service>
-
     </services>
 </container>

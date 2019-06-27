@@ -1,12 +1,10 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Service\ORM;
+namespace Vaderlab\EAV\Core\ORM;
 
 
-use Doctrine\ORM\EntityManagerInterface;
-
-interface EAVEntityManagerInterface
+interface EntityManagerInterface
 {
     /**
      * @param object $object

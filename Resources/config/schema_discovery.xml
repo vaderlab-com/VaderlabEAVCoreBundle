@@ -22,7 +22,7 @@
         <service id="vaderlab.eav.core.schema.discover.orm_schema"
                  class="Vaderlab\EAV\Core\Schema\Discover\ORM\SchemaDiscover"
                  lazy="true">
-            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="vaderlab.eav.schema_resolver"/>
         </service>
     </services>
 </container>

@@ -59,7 +59,7 @@ abstract class AbstractValue implements ValueInterface
      *     fetch="LAZY",
      *     cascade={"persist"}
      *     )
-     * @ORM\JoinColumn(name="attribute_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="attribute_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     protected $attribute;

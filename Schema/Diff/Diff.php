@@ -13,7 +13,8 @@ use Vaderlab\EAV\Core\Model\SchemaInterface;
 use Vaderlab\EAV\Core\Repository\SchemaRepository;
 use Vaderlab\EAV\Core\Schema\Diff\Comparison\SchemaCompareProcessor;
 use Vaderlab\EAV\Core\Schema\Discover\SchemaDiscoverInterface;
-use Vaderlab\EAV\Core\Service\Schema\SchemaManager;
+use Vaderlab\EAV\Core\Service\Schema\EAVSchemaManager;
+use Vaderlab\EAV\Core\Service\Schema\EAVSchemaManagerInterface;
 
 /**
  * Class Diff
@@ -44,7 +45,7 @@ class Diff implements DiffInterface
     private $schemaCompareProcessor;
 
     /**
-     * @var SchemaManager
+     * @var EAVSchemaManager
      */
     private $schemaManager;
 
@@ -54,14 +55,14 @@ class Diff implements DiffInterface
      * @param SchemaDiscoverInterface $fsDiscover
      * @param SchemaCompareProcessor $schemaCompareProcessor
      * @param EntityManagerInterface $entityManager
-     * @param SchemaManager $schemaManager
+     * @param EAVSchemaManagerInterface $schemaManager
      */
     public function __construct(
         SchemaDiscoverInterface $dbDiscover,
         SchemaDiscoverInterface $fsDiscover,
         SchemaCompareProcessor $schemaCompareProcessor,
         EntityManagerInterface $entityManager,
-        SchemaManager $schemaManager
+        EAVSchemaManagerInterface $schemaManager
     )
     {
         $this->dbDiscover = $dbDiscover;
@@ -116,13 +117,5 @@ class Diff implements DiffInterface
     protected function createNewSchema(string $name): Schema
     {
         $this->schemaManager->createSchema($name, new ArrayCollection([]));
-    }
-
-    /**
-     * @return SchemaRepository
-     */
-    protected function getSchemaRepository(): SchemaRepository
-    {
-        return $this->entityManager->getRepository(Schema::class);
     }
 }

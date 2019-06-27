@@ -11,28 +11,28 @@
     </parameters>
 
     <services>
-        <service id="Vaderlab\EAV\Core\Service\ORM\EntityManager"
-                 public="true"
-                 decorates="doctrine.orm.entity_manager"
-                 decoration-priority="1">
-            <argument type="service" id="Vaderlab\EAV\Core\Service\ORM\EntityManager.inner"/>
-            <argument type="service" id="vaderlab.eav.core.service.reflection.class_to_entity_resolver" />
-            <argument type="service" id="vaderlab.eav.core.service.reflection.entity_to_class_resolver" />
-            <argument type="service" id="Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy"/>
+        <service id="vaderlab.eav.schema_resolver"
+                 class="Vaderlab\EAV\Core\Service\Schema\EAVSchemaManager"
+                 public="true">
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
         </service>
-
-        <service class="Vaderlab\EAV\Core\Service\Schema\SchemaManager" id="vaderlab.eav.schema_resolver">
-        </service>
-
-        <service class="Vaderlab\EAV\Core\Service\Entity\EntityServiceORM"
-                 id="vaderlab.eav.entity_resolver"
+        <service id="vaderlab.eav.entity_resolver"
+                 class="Vaderlab\EAV\Core\Service\Entity\EAVEntityManagerORM"
                  public="true">
             <argument type="service" id="doctrine.orm.default_entity_manager" />
             <argument type="service" id="vaderlab.eav.core.service.data_type.data_type_provider" />
             <argument type="service" id="vaderlab.eav.core.service.reflection.class_to_entity_resolver" />
             <argument type="string">Vaderlab\EAV\Core\Entity\Entity</argument>
         </service>
-
+        <service id="Vaderlab\EAV\Core\ORM\EntityManager"
+                 public="true"
+                 decorates="doctrine.orm.entity_manager"
+                 decoration-priority="1">
+            <argument type="service" id="Vaderlab\EAV\Core\ORM\EntityManager.inner"/>
+            <argument type="service" id="vaderlab.eav.core.service.reflection.class_to_entity_resolver" />
+            <argument type="service" id="vaderlab.eav.core.service.reflection.entity_to_class_resolver" />
+            <argument type="service" id="Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy"/>
+        </service>
         <service id="Vaderlab\EAV\Core\Service\Entity\EntityServiceProxy">
             <argument type="service" id="service_container" />
             <argument key="$entityService" type="string">vaderlab.eav.entity_resolver</argument>

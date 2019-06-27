@@ -90,7 +90,7 @@ class Attribute implements AttributeInterface
      *     fetch="LAZY",
      *     inversedBy="attributes"
      * )
-     * @ORM\JoinColumn(name="schema_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="schema_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @ORM\Cache("NONSTRICT_READ_WRITE")
      */
     private $schema;

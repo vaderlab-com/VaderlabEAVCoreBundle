@@ -6,7 +6,7 @@
  * Time: 22:27
  */
 
-namespace Vaderlab\EAV\Core\Service\DataType;
+namespace Vaderlab\EAV\Core\ORM\DataType;
 
 
 use Vaderlab\EAV\Core\Entity\AbstractValue;

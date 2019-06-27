@@ -9,8 +9,26 @@ use Vaderlab\EAV\Core\Entity\Attribute;
 use Vaderlab\EAV\Core\Entity\Entity;
 use Vaderlab\EAV\Core\Entity\Schema;
 
-interface EntityServiceInterface
+interface EAVEntityManagerInterface
 {
+    /**
+     * @param string $classname
+     * @return bool
+     */
+    public function isEAVEntityClass(string $classname): bool;
+
+    /**
+     * @param object $object
+     * @return bool
+     */
+    public function isEAVEntity(object $object): bool;
+
+    /**
+     * @param int $id
+     * @return Entity|null
+     */
+    public function findById(int $id): ?Entity;
+
     /**
      * @param Schema $schema
      * @return Entity
@@ -31,13 +49,6 @@ interface EntityServiceInterface
      * @return mixed
      */
     public function getValue($entity, String $attribute);
-
-    /**
-     * @param $entity
-     * @param Attribute $attribute
-     * @return mixed
-     */
-    public function getValueByAttribute($entity, Attribute $attribute);
 
     /**
      * @param $entity

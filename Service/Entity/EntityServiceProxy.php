@@ -30,9 +30,9 @@ class EntityServiceProxy
     }
 
     /**
-     * @return EntityServiceInterface
+     * @return EAVEntityManagerInterface
      */
-    public function getService() : EntityServiceInterface
+    public function getService() : EAVEntityManagerInterface
     {
         return $this->container->get($this->entityService);
     }

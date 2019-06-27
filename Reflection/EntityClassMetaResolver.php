@@ -71,11 +71,6 @@ class EntityClassMetaResolver
         throw new ForeignPropertyException(sprintf('%s at the class %s', $message, $entityClass->getName()));
     }
 
-    public function getSchemaName(\ReflectionClass $entityClass)
-    {
-
-    }
-
     /**
      * @param \ReflectionClass $entityClass
      * @return array
@@ -124,6 +119,12 @@ class EntityClassMetaResolver
         return !!$this->getProtectedEntityAnnotation($refClass);
     }
 
+    /**
+     * @param $refClass
+     * @return object|null
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     */
     public function getProtectedEntityAnnotation($refClass)
     {
         if(is_string($refClass)) {

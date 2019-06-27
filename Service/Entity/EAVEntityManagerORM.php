@@ -6,7 +6,6 @@ namespace Vaderlab\EAV\Core\Service\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Vaderlab\EAV\Core\Entity\AbstractValue;
 use Vaderlab\EAV\Core\Entity\Attribute;
 use Vaderlab\EAV\Core\Entity\Entity;
@@ -14,9 +13,9 @@ use Vaderlab\EAV\Core\Entity\Schema;
 use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
 use Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException;
 use Vaderlab\EAV\Core\Reflection\ClassToEntityResolver;
+use Vaderlab\EAV\Core\Reflection\EntityToClassResolver;
 use Vaderlab\EAV\Core\Repository\EntityRepository;
-use Vaderlab\EAV\Core\Service\DataType\DataTypeProvider;
-use Vaderlab\EAV\Core\Service\ORM\EntityManager;
+use Vaderlab\EAV\Core\ORM\DataType\DataTypeProvider;
 
 /**
  * Class EntityServiceORM
@@ -24,14 +23,14 @@ use Vaderlab\EAV\Core\Service\ORM\EntityManager;
  *
  * @todo: Exception
  */
-class EntityServiceORM implements EntityServiceInterface
+class EAVEntityManagerORM implements \Vaderlab\EAV\Core\Service\Entity\EAVEntityManagerInterface
 {
     /**
      * @var DataTypeProvider
      */
     private $dataTypeProvider;
     /**
-     * @var EntityManagerInterface
+     * @var EAVEntityManagerInterface
      */
     private $entityManager;
     /**
@@ -43,6 +42,11 @@ class EntityServiceORM implements EntityServiceInterface
      * @var ClassToEntityResolver
      */
     private $classToEntityResolver;
+
+    /**
+     * @var EntityToClassResolver
+     */
+    private $entityToClassResolver;
 
     /**
      * EntityServiceORM constructor.
@@ -70,7 +74,7 @@ class EntityServiceORM implements EntityServiceInterface
      * @return Entity
      * @throws \Exception
      */
-    public function createEntity(Schema $schema): Entity
+    public function createEntity(?Schema $schema): Entity
     {
         $entity         = new Entity();
         $entity->setSchema($schema);
@@ -93,6 +97,37 @@ class EntityServiceORM implements EntityServiceInterface
     }
 
     /**
+     * @param string $classname
+     * @param int $id
+     * @return object|null
+     */
+    public function findByClassAndId(string $classname, int $id)
+    {
+        $qb = $this->getEAVEntityRepository()->createQueryBuilder('q');
+        $qb
+            ->innerJoin('q.schema', 's')
+            ->andWhere('q.id = :id')
+            ->andWhere('s.entityClass = :class OR s.name = :class')
+            ->setParameters([
+                'class' => $classname,
+                'id'    => $id,
+            ])
+        ;
+        $result = $qb->getQuery()->getResult();
+
+        return count($result) ? $result[0] : null;
+    }
+
+    /**
+     * @param int $id
+     * @return Entity|null
+     */
+    public function findById(int $id): ?Entity
+    {
+        return $this->getEAVEntityRepository()->findOneBy(['id' => $id]);
+    }
+
+    /**
      * @param $entity
      * @param String $attribute
      * @return mixed
@@ -108,11 +143,6 @@ class EntityServiceORM implements EntityServiceInterface
         $attributeObj = $this->getEntityValueObjByName($entity, $attribute);
 
         return $attributeObj->getValue();
-    }
-
-    public function getValueByAttribute($entity, Attribute $attribute)
-    {
-
     }
 
     /**
@@ -187,69 +217,20 @@ class EntityServiceORM implements EntityServiceInterface
         return $this->initEntityValueAttributeByName($schema, $entity, $attributeName);
     }
 
-
     /**
-     * @param Schema $schema
-     * @param Entity $entity
-     * @param string $attributeName
-     * @return AbstractValue
-     * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
-     */
-    protected function initEntityValueAttributeByName(Schema $schema, Entity $entity, string $attributeName): AbstractValue
-    {
-        $attributeObject    = $schema->getAttribute($attributeName);
-        $valueObject        = $this->dataTypeProvider->createValueObject($attributeObject->getType());
-
-        $valueObject->setEntity($entity);
-        $entity->getValues()->add($valueObject);
-
-        $valueObject->setAttribute($attributeObject);
-
-        if (!($valueObject instanceof ValueTypeHasDefaultInterface)) {
-            return $valueObject;
-        }
-
-        $defaultValue = $attributeObject->getDefaultValue();
-        if (!$defaultValue) {
-            return $valueObject;
-        }
-
-        settype($defaultValue, $valueObject->getCastType());
-        $valueObject->setValue($defaultValue);
-
-        return $valueObject;
-    }
-
-    /**
-     * @param object $object
+     * @param null $entity
      * @return Entity|null
      * @throws UnregisteredEntityAttributeException
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @throws \ReflectionException
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
-     */
-    protected function resolveEntity(object $object): ?Entity
-    {
-        if($object instanceof Entity) {
-            return $object;
-        }
-
-        if(!$this->isEavEntity($object)) {
-            throw new \LogicException('Object is not Entity');
-        }
-
-        return $this->classToEntityResolver->resolve($object);
-    }
-
-    /**
-     * @param object $entity
-     * @return Entity|null
-     * @throws \Doctrine\ORM\EntityNotFoundException
-     * @throws \ReflectionException
-     * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
-     * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
-     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
     public function resolveEAVEntity($entity = null): ?Entity
     {
@@ -299,5 +280,71 @@ class EntityServiceORM implements EntityServiceInterface
     public function getEAVEntityRepository(): EntityRepository
     {
         return $this->entityManager->getRepository(Entity::class);
+    }
+
+    /**
+     * @param Schema $schema
+     * @param Entity $entity
+     * @param string $attributeName
+     * @return AbstractValue
+     * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
+     */
+    protected function initEntityValueAttributeByName(
+        Schema $schema,
+        Entity $entity,
+        string $attributeName): AbstractValue
+    {
+        $attributeObject    = $schema->getAttribute($attributeName);
+        $valueObject        = $this->dataTypeProvider->createValueObject($attributeObject->getType());
+
+        $valueObject->setEntity($entity);
+        $entity->getValues()->add($valueObject);
+
+        $valueObject->setAttribute($attributeObject);
+
+        if (!($valueObject instanceof ValueTypeHasDefaultInterface)) {
+            return $valueObject;
+        }
+
+        $defaultValue = $attributeObject->getDefaultValue();
+        if (!$defaultValue) {
+            return $valueObject;
+        }
+
+        settype($defaultValue, $valueObject->getCastType());
+        $valueObject->setValue($defaultValue);
+
+        return $valueObject;
+    }
+
+    /**
+     *
+     * @todo: create  exception
+     *
+     * @param object $object
+     * @return Entity|null
+     * @throws UnregisteredEntityAttributeException
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     * @throws \ReflectionException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
+     */
+    protected function resolveEntity(object $object): ?Entity
+    {
+        if($object instanceof Entity) {
+            return $object;
+        }
+
+        if(!$this->isEavEntity($object)) {
+            throw new \LogicException('Object is not Entity');
+        }
+
+        return $this->classToEntityResolver->resolve($object);
     }
 }

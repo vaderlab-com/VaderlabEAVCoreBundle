@@ -58,7 +58,8 @@ class Schema implements SchemaInterface
      *     targetEntity="Entity",
      *     mappedBy="schema",
      *     fetch="LAZY",
-     *     cascade={"remove"}
+     *     cascade={"all"}
+     *
      *     )
      */
     private $entities;
@@ -70,7 +71,7 @@ class Schema implements SchemaInterface
      *     targetEntity="Vaderlab\EAV\Core\Entity\Attribute",
      *     mappedBy="schema",
      *     fetch="EAGER",
-     *     cascade={"remove", "persist", "merge"}
+     *     cascade={"all"}
      *     )
      */
     private $attributes;

@@ -10,21 +10,27 @@ use Doctrine\ORM\EntityManagerInterface;
 use Vaderlab\EAV\Core\Entity\Schema;
 use Vaderlab\EAV\Core\Model\SchemaInterface;
 use Vaderlab\EAV\Core\Schema\Discover\SchemaDiscoverInterface;
+use Vaderlab\EAV\Core\Service\Schema\EAVSchemaManager;
+use Vaderlab\EAV\Core\Service\Schema\EAVSchemaManagerInterface;
 
+/**
+ * Class SchemaDiscover
+ * @package Vaderlab\EAV\Core\Schema\Discover\ORM
+ */
 class SchemaDiscover implements SchemaDiscoverInterface
 {
     /**
      * @var EntityManagerInterface
      */
-    private $entityManager;
+    private $schemaManager;
 
     /**
      * SchemaDiscover constructor.
-     * @param EntityManagerInterface $entityManager
+     * @param EAVSchemaManagerInterface $schemaManager
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EAVSchemaManagerInterface $schemaManager)
     {
-        $this->entityManager = $entityManager;
+        $this->schemaManager = $schemaManager;
     }
 
     /**
@@ -32,12 +38,7 @@ class SchemaDiscover implements SchemaDiscoverInterface
      */
     public function getSchemes(): Collection
     {
-        $schemaRepository = $this->entityManager->getRepository(Schema::class);
-        $schemes = new ArrayCollection($schemaRepository->findAll());
-
-        return $schemes->filter(function (SchemaInterface $schema) {
-            return !!$schema->getEntityClass();
-        });
+        return $this->schemaManager->findAllProtectedSchemes();
     }
 
     /**
@@ -46,8 +47,6 @@ class SchemaDiscover implements SchemaDiscoverInterface
      */
     public function getSchemaByClass(string $classname): SchemaInterface
     {
-        return $this->entityManager->getRepository(Schema::class)->findOneBy([
-            'entityClass' => $classname,
-        ]);
+        return $this->schemaManager->findByClass($classname);
     }
 }

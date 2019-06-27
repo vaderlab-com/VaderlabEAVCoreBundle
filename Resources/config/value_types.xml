@@ -25,7 +25,7 @@
         <defaults autowire="true" autoconfigure="true" public="true"/>
 
         <service
-                class="Vaderlab\EAV\Core\Service\DataType\DataTypeProvider"
+                class="Vaderlab\EAV\Core\ORM\DataType\DataTypeProvider"
                 id="vaderlab.eav.core.service.data_type.data_type_provider"
                 public="true">
             <argument type="collection">
