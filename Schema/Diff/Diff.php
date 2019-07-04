@@ -92,6 +92,7 @@ class Diff implements DiffInterface
             $dbSchema            = $dbSchemas->filter($filter)->first();
             if(!$dbSchema) {
                 $dbSchema = $this->createNewSchema($fsSchema->getName());
+                $dbSchema->setEntityClass($currentSchemaClass);
             }
 
             $tmpDiff = $this->schemaCompareProcessor->process($dbSchema, $fsSchema, $apply);
@@ -116,6 +117,6 @@ class Diff implements DiffInterface
      */
     protected function createNewSchema(string $name): Schema
     {
-        $this->schemaManager->createSchema($name, new ArrayCollection([]));
+        return $this->schemaManager->createSchema($name, new ArrayCollection([]));
     }
 }

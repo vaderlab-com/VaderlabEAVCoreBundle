@@ -17,7 +17,7 @@ use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
  * Class ValueInteger
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
- * @ORM\Cache(usage="READ_WRITE", region="value_region")
+ * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */
 class ValueInteger extends AbstractValue implements ValueTypeHasDefaultInterface
 {

@@ -9,7 +9,7 @@ use Vaderlab\EAV\Core\Entity\AbstractValue;
  * Class ValueDateTime
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
- * @ORM\Cache(usage="READ_WRITE", region="value_region")
+ * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */
 class ValueDateTime extends AbstractValue
 {

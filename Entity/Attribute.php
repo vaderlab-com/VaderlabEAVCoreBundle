@@ -17,7 +17,7 @@ use Vaderlab\EAV\Core\Model\AttributeInterface;
 /**
  * @ORM\Table(name="vaderlab_eav_attribute")
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\AttributeRepository")
- * @ORM\Cache(usage="READ_WRITE", region="attribute_region")
+ * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  * @ORM\Table(name="Attribute",
  *     uniqueConstraints={
  *      @ORM\UniqueConstraint(name="attribute", columns={"name", "schema_id"})
@@ -91,7 +91,7 @@ class Attribute implements AttributeInterface
      *     inversedBy="attributes"
      * )
      * @ORM\JoinColumn(name="schema_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-     * @ORM\Cache("NONSTRICT_READ_WRITE")
+     * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     private $schema;
 

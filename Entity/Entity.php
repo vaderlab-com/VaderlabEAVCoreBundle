@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="vaderlab_eav_entity")
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\EntityRepository")
- * @ORM\Cache(usage="READ_WRITE", region="eav_entity_region")
+ * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  * @ORM\HasLifecycleCallbacks()
  */
 class Entity implements EAVEntityInterface
@@ -56,7 +56,7 @@ class Entity implements EAVEntityInterface
      *     referencedColumnName="id",
      *     nullable=false
      *     )
-     * @ORM\Cache("NONSTRICT_READ_WRITE")
+     * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     private $schema;
 
@@ -65,9 +65,10 @@ class Entity implements EAVEntityInterface
      * @ORM\OneToMany(
      *     targetEntity="Vaderlab\EAV\Core\Entity\AbstractValue",
      *     mappedBy="entity",
-     *     cascade={"all"}
+     *     cascade={"all"},
+     *     fetch="EAGER"
      *     )
-     * @ORM\Cache("READ_WRITE")
+     * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     protected $values;
 

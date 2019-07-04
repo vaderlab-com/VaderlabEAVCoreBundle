@@ -251,16 +251,17 @@ class EAVEntityManagerORM implements \Vaderlab\EAV\Core\Service\Entity\EAVEntity
      */
     public function isEavEntityClass(string $classname): bool
     {
-        $repository = $this->getEAVEntityRepository();
+        $repository = $this->entityManager->getRepository(Schema::class);
         $qb         = $repository->createQueryBuilder('q');
 
-        $qb ->select('q.id')
-            ->innerJoin('q.schema', 's')
-            ->where('s.name = :name OR s.entityClass = :name')
+        $qb ->select('q')
+            ->where('q.name = :name OR q.entityClass = :name')
+            ->setCacheable(true)
+            ->setCacheRegion('eav')
             ->setParameter('name', $classname)
         ;
 
-        $result = $qb->getQuery()->getArrayResult();
+        $result = $qb->getQuery()->getResult();
 
         return !!count($result);
     }

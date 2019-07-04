@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Class ValueUrl
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
- * @ORM\Cache(usage="READ_WRITE", region="value_region")
+ * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */
 class ValueUrl extends AbstractValue
 {

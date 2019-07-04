@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class AbstractValue
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
+ * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
  * @ORM\Table(name="vaderlab_eav_abstract_value")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="value_type", type="integer")
@@ -43,7 +44,7 @@ abstract class AbstractValue implements ValueInterface
      *     cascade={"persist", "merge"}
      *     )
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", nullable=false)
-     * @ORM\Cache("NONSTRICT_READ_WRITE")
+     * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     protected $entity;
 
@@ -60,7 +61,7 @@ abstract class AbstractValue implements ValueInterface
      *     cascade={"persist"}
      *     )
      * @ORM\JoinColumn(name="attribute_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-     * @ORM\Cache("NONSTRICT_READ_WRITE")
+     * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     protected $attribute;
 

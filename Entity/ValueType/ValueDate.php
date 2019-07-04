@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class ValueDate
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
- * @ORM\Cache(usage="READ_WRITE", region="value_region")
+ * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */
 class ValueDate extends AbstractValue implements ValueTypeHasDefaultInterface
 {

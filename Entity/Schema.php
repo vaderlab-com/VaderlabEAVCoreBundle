@@ -17,7 +17,7 @@ use Vaderlab\EAV\Core\Model\SchemaInterface;
 /**
  * @ORM\Table(name="vaderlab_eav_schema")
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\SchemaRepository")
- * @ORM\Cache(usage="READ_WRITE", region="model_type_region")
+ * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */
 class Schema implements SchemaInterface
 {
@@ -66,7 +66,7 @@ class Schema implements SchemaInterface
 
     /**
      * @var Collection
-     * @ORM\Cache("NONSTRICT_READ_WRITE")
+     * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      * @ORM\OneToMany(
      *     targetEntity="Vaderlab\EAV\Core\Entity\Attribute",
      *     mappedBy="schema",

@@ -11,7 +11,7 @@ use Vaderlab\EAV\Core\Entity\AbstractValue;
  * Class ValueEmail
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
- * @ORM\Cache(usage="READ_WRITE", region="value_region")
+ * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */
 class ValueEmail extends AbstractValue
 {
