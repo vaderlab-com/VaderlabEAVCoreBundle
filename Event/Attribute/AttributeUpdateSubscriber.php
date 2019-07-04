@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Subscriber\Attribute;
+namespace Vaderlab\EAV\Core\Event\Attribute;
 
 
 use Doctrine\Common\EventSubscriber;

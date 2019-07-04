@@ -51,13 +51,17 @@ class EntityToClassResolver
 
     /**
      * @param Entity $entity
+     * @param null $eavObject
      * @return object
      * @throws ReflectionException
      * @throws \ReflectionException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
-    public function resolve(Entity $entity): object
+    public function resolve(Entity $entity, $eavObject = null): object
     {
         $schema         = $entity->getSchema();
         $entityClass    = $schema->getEntityClass();
@@ -67,7 +71,11 @@ class EntityToClassResolver
         }
 
         $entityId       = $entity->getId();
-        $entityObject   = $this->reflectionService->createObject($entityClass);
+        $entityObject   = $eavObject;
+        if($entityObject === null) {
+            $entityObject   = $this->reflectionService->createObject($entityClass);
+        }
+
         $entityRef      = $this->reflectionService->createReflectionObject($entityObject);
         $entityRefClass = $this->reflectionService->createReflectionClass($entityClass);
         /** @var array<Attribute> $protectedAttrs */

@@ -39,6 +39,16 @@ class EntityManager implements EntityManagerInterface
     private $entityServiceProxy;
 
     /**
+     * @var PersistentEntityCollection
+     */
+    private $persistentCollection;
+
+    /**
+     * @var PersistentEntityCollection
+     */
+    private $persistentEntityCollection;
+
+    /**
      * EntityManager constructor.
      * @param ObjectManager $entityManager
      * @param ClassToEntityResolver $classToEntityResolver
@@ -49,13 +59,15 @@ class EntityManager implements EntityManagerInterface
         ObjectManager $entityManager,
         ClassToEntityResolver $classToEntityResolver,
         EntityToClassResolver $entityToClassResolver,
-        EntityServiceProxy $entityServiceProxy
+        EntityServiceProxy $entityServiceProxy,
+        PersistentEntityCollection $persistentEntityCollection
     ) {
         $this->entityManager            = $entityManager;
         $this->entityToClassResolver    = $entityToClassResolver;
 
         $this->classToEntityResolver    = $classToEntityResolver;
         $this->entityServiceProxy       = $entityServiceProxy;
+        $this->persistentCollection     = $persistentEntityCollection;
     }
 
     /**
@@ -96,12 +108,18 @@ class EntityManager implements EntityManagerInterface
     }
 
     /**
-     * @param $entity
+     * @param object $entity
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @throws \ReflectionException
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
     public function persist($entity): void
     {
@@ -109,12 +127,18 @@ class EntityManager implements EntityManagerInterface
     }
 
     /**
-     * @param $entity
+     * @param object $entity
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @throws \ReflectionException
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
     public function detach($entity): void
     {
@@ -140,6 +164,12 @@ class EntityManager implements EntityManagerInterface
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
     public function remove($object): void
     {
@@ -153,6 +183,12 @@ class EntityManager implements EntityManagerInterface
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
     public function refresh($object): void
     {
@@ -161,12 +197,18 @@ class EntityManager implements EntityManagerInterface
 
     /**
      * @param $object
-     * @return bool|void
+     * @return mixed
      * @throws \Doctrine\ORM\EntityNotFoundException
      * @throws \ReflectionException
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
     public function contains($object)
     {
@@ -180,6 +222,12 @@ class EntityManager implements EntityManagerInterface
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
     public function initializeObject($object)
     {
@@ -203,16 +251,27 @@ class EntityManager implements EntityManagerInterface
      * @throws \Vaderlab\EAV\Core\Exception\Service\DataType\UnregisteredValueTypeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Entity\UnregisteredEntityAttributeException
      * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ClassToEntityBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassBindException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\EntityClassNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\ForeignPropertyException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertiesAlreadyDeclaredException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertyNotExistsException
+     * @throws \Vaderlab\EAV\Core\Exception\Service\Reflection\PropertySchemeInvalidException
      */
     protected function callAction(string $action, object $object)
     {
         $es = $this->getEntityService();
         $entity = $object;
-        if($es->isEAVEntity($object)) {
+        $isEavEntity = $es->isEAVEntity($object);
+        if($isEavEntity) {
             $entity = $es->resolveEAVEntity($object);
         }
 
         $result = call_user_func_array([$this->entityManager, $action], [$entity]);
+
+        if($isEavEntity && in_array($action, ['persist'])) {
+            $this->persistentCollection->add($entity, $object);
+        }
 
         return $result;
     }

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Vaderlab\EAV\Core\Subscriber\Entity;
+namespace Vaderlab\EAV\Core\Event\Entity;
 
 
 use Doctrine\Common\EventSubscriber;
