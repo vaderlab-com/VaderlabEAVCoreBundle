@@ -11,6 +11,9 @@ use Vaderlab\EAV\Core\Entity\AbstractValue;
  * Class ValueEmail
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
+ * @ORM\Table(name="value_email", indexes={
+ *     @ORM\Index(name="val_idx", columns={"val"})})
+ * })
  * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */
 class ValueEmail extends AbstractValue

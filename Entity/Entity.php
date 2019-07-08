@@ -14,7 +14,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="vaderlab_eav_entity")
+ * @ORM\Table(name="vaderlab_eav_entity", indexes={
+ *      @ORM\Index(name="sch_idx", columns={"id", "schema_id"})
+ * })
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\EntityRepository")
  * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  * @ORM\HasLifecycleCallbacks()
@@ -51,11 +53,7 @@ class Entity implements EAVEntityInterface
      *     fetch="EAGER",
      *     cascade={"persist", "merge", "refresh"}
      *     )
-     * @ORM\JoinColumn(
-     *     name="schema_id",
-     *     referencedColumnName="id",
-     *     nullable=false
-     *     )
+     * @ORM\JoinColumn(name="schema_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     private $schema;
@@ -65,7 +63,8 @@ class Entity implements EAVEntityInterface
      * @ORM\OneToMany(
      *     targetEntity="Vaderlab\EAV\Core\Entity\AbstractValue",
      *     mappedBy="entity",
-     *     cascade={"all"},
+     *     cascade={"persist", "merge", "refresh"},
+     *     orphanRemoval=false,
      *     fetch="EAGER"
      *     )
      * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
@@ -73,11 +72,23 @@ class Entity implements EAVEntityInterface
     protected $values;
 
     /**
+     * @var ArrayCollection<UniqueIndex>
+     * @ORM\OneToMany(
+     *     targetEntity="Vaderlab\EAV\Core\Entity\UniqueIndex",
+     *     mappedBy="entity",
+     *     fetch="EXTRA_LAZY"
+     * )
+     *  @ORM\JoinColumn(name="id", referencedColumnName="entity_id", nullable=false, onDelete="CASCADE")
+     */
+    private $uniqueIndexes;
+
+    /**
      * Model constructor.
      */
     public function __construct()
     {
         $this->values = new ArrayCollection();
+        $this->uniqueIndexes = new ArrayCollection();
     }
 
     /**
@@ -145,6 +156,26 @@ class Entity implements EAVEntityInterface
     public function setValues(Collection $values): Entity
     {
         $this->values = $values;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection<UniqueIndex>
+     */
+    public function getUniqueIndexes(): ArrayCollection
+    {
+        return $this->uniqueIndexes;
+    }
+
+    /**
+     * @param ArrayCollection<UniqueIndex> $uniqueIndexes
+     *
+     * @return Entity
+     */
+    public function setUniqueIndexes(ArrayCollection $uniqueIndexes): self
+    {
+        $this->uniqueIndexes = $uniqueIndexes;
 
         return $this;
     }

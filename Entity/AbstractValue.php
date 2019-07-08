@@ -16,7 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
  * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
- * @ORM\Table(name="vaderlab_eav_abstract_value")
+ * @ORM\Table(name="vaderlab_eav_abstract_value", indexes={
+ *   @ORM\Index(name="rel_idx", columns={"attribute_id", "entity_id"})
+ *     })
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="value_type", type="integer")
  * @ORM\DiscriminatorMap({
@@ -41,9 +43,9 @@ abstract class AbstractValue implements ValueInterface
      *     targetEntity="Vaderlab\EAV\Core\Entity\Entity",
      *     inversedBy="values",
      *     fetch="EXTRA_LAZY",
-     *     cascade={"persist", "merge"}
+     *     cascade={"persist"}
      *     )
-     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     protected $entity;

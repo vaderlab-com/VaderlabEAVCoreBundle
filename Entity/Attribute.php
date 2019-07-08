@@ -87,7 +87,7 @@ class Attribute implements AttributeInterface
      * @var Schema
      * @ORM\ManyToOne(
      *     targetEntity="Schema",
-     *     fetch="LAZY",
+     *     fetch="EXTRA_LAZY",
      *     inversedBy="attributes"
      * )
      * @ORM\JoinColumn(name="schema_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")

@@ -57,10 +57,11 @@ class Schema implements SchemaInterface
      * @ORM\OneToMany(
      *     targetEntity="Entity",
      *     mappedBy="schema",
-     *     fetch="LAZY",
-     *     cascade={"all"}
-     *
+     *     fetch="EXTRA_LAZY",
+     *     orphanRemoval=false,
+     *     cascade={"persist"}
      *     )
+     * @ORM\JoinColumn(name="id", referencedColumnName="schema_id", nullable=false, onDelete="CASCADE")
      */
     private $entities;
 
@@ -70,8 +71,9 @@ class Schema implements SchemaInterface
      * @ORM\OneToMany(
      *     targetEntity="Vaderlab\EAV\Core\Entity\Attribute",
      *     mappedBy="schema",
-     *     fetch="EAGER",
-     *     cascade={"all"}
+     *     fetch="EXTRA_LAZY",
+     *     orphanRemoval=false,
+     *     cascade={"persist"}
      *     )
      */
     private $attributes;

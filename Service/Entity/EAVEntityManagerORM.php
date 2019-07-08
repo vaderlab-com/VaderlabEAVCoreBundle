@@ -108,6 +108,8 @@ class EAVEntityManagerORM implements \Vaderlab\EAV\Core\Service\Entity\EAVEntity
             ->innerJoin('q.schema', 's')
             ->andWhere('q.id = :id')
             ->andWhere('s.entityClass = :class OR s.name = :class')
+            ->setCacheable(true)
+            ->setCacheRegion('eav')
             ->setParameters([
                 'class' => $classname,
                 'id'    => $id,
