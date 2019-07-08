@@ -23,28 +23,6 @@ class SchemaCompareProcessor extends AbstractCompareProcessor
         $this->attributeCompareProcessor    = $attributeCompareProcessor;
     }
 
-    /**
-     * @param \Vaderlab\EAV\Core\Model\AttributeInterface $source
-     * @param \Vaderlab\EAV\Core\Model\AttributeInterface $dest
-     * @param bool $apply
-     * @return array
-     */
-    public function process($source, $dest, bool $apply = false): array
-    {
-        $result     = [];
-        $properties = parent::process($source, $dest, $apply);
-        $attributes = $this->compareAttributes($source, $dest, $apply);
-        if(count($properties)) {
-            $result = $properties;
-        }
-
-        if(count($attributes)) {
-            $result['attributes'] = $attributes;
-        }
-
-        return $result;
-    }
-
     protected function compareAttributes(Schema $source, SchemaInterface $dest, bool $apply): array
     {
         $diff = [];
@@ -78,5 +56,27 @@ class SchemaCompareProcessor extends AbstractCompareProcessor
         }
 
         return $diff;
+    }
+
+    /**
+     * @param \Vaderlab\EAV\Core\Model\SchemaInterface $source
+     * @param \Vaderlab\EAV\Core\Model\SchemaInterface $dest
+     * @param bool $apply
+     * @return array
+     */
+    public function process($source, $dest, bool $apply = false): array
+    {
+        $result     = [];
+        $properties = parent::process($source, $dest, $apply);
+        $attributes = $this->compareAttributes($source, $dest, $apply);
+        if(count($properties)) {
+            $result = $properties;
+        }
+
+        if(count($attributes)) {
+            $result['attributes'] = $attributes;
+        }
+
+        return $result;
     }
 }

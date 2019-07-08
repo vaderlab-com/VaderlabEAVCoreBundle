@@ -4,6 +4,8 @@
 namespace Vaderlab\EAV\Core\Exception\Attribute;
 
 
-class ProtectedAttributeDeniedException extends \LogicException
+use Vaderlab\EAV\Core\Exception\EAVLogicException;
+
+class ProtectedAttributeDeniedException extends EAVLogicException
 {
 }

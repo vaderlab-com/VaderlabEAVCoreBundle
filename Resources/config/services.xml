@@ -25,6 +25,12 @@
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.attribute_compare_processor"/>
         </service>
 
+        <service id="Vaderlab\EAV\Core\Event\Schema\SchemaUpdateSubscriber">
+            <tag name="doctrine.event_subscriber" connection="default"/>
+            <argument type="service" id="vaderlab.eav.core.schema.discover.file_schema" />
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.schema_compare_processor"/>
+        </service>
+
         <service id="Vaderlab\EAV\Core\Event\Entity\ValueValidationSubscriber">
             <tag name="doctrine.event_subscriber" connection="default"/>
             <argument type="service" id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" />
