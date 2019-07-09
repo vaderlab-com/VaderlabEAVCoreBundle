@@ -8,6 +8,7 @@ use Vaderlab\EAV\Core\Entity\AbstractValue;
 /**
  * Class ValueDateTime
  * @package Vaderlab\EAV\Core\Entity\ValueType
+ * @ORM\Table(name="vaderlab_eav_value_datetime")
  * @ORM\Entity()
  * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */

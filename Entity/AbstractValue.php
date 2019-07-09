@@ -27,8 +27,6 @@ use Doctrine\ORM\Mapping as ORM;
  *     3    = "Vaderlab\EAV\Core\Entity\ValueType\ValueFloat",
  *     4    = "Vaderlab\EAV\Core\Entity\ValueType\ValueString",
  *     5    = "Vaderlab\EAV\Core\Entity\ValueType\ValueText",
- *     7    = "Vaderlab\EAV\Core\Entity\ValueType\ValueEmail",
- *     8    = "Vaderlab\EAV\Core\Entity\ValueType\ValueUrl",
  *     9    = "Vaderlab\EAV\Core\Entity\ValueType\ValueDate",
  *     10   = "Vaderlab\EAV\Core\Entity\ValueType\ValueDateTime"
  * })

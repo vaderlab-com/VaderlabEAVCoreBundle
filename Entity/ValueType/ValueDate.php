@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class ValueDate
+ * @ORM\Table(name="vaderlab_eav_value_date")
  * @package Vaderlab\EAV\Core\Entity\ValueType
  * @ORM\Entity()
  * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")

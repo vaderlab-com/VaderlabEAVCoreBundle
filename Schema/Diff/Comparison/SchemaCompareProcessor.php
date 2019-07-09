@@ -39,8 +39,10 @@ class SchemaCompareProcessor extends AbstractCompareProcessor
             $currentAttrName = $newAttr->getName();
             $model = $attrSource->filter($filter)->first();
 
+            $isNew = false;
             /** @TODO: temporary solution*/
             if(!$model) {
+                $isNew = true;
                 $model = new Attribute();
                 $model->setSchema($source);
                 $model->setName($currentAttrName);
@@ -52,6 +54,7 @@ class SchemaCompareProcessor extends AbstractCompareProcessor
                 continue;
             }
 
+            $tmpDiff['is_new'] = $isNew;
             $diff[$currentAttrName] = $tmpDiff;
         }
 

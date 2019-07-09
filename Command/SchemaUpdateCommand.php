@@ -70,13 +70,76 @@ class SchemaUpdateCommand extends Command
 
         $isDump     = $input->getOption(self::OPTION_DUMP);
         $isUpdate   = $input->getOption(self::OPTION_SCHEMA_UPDATE);
-        $diffArray  = $this->diffService->diff($isUpdate);
+
+        $diffArray  = $this->createDiff($isUpdate);
 
         if(!$isDump) {
             return;
         }
 
+        $this->showDiff($output, $diffArray);
+
+        if(!$isUpdate) {
+            $output->writeln('<question>To perform the migration, run the command using the "--force" flag</question>');
+        }
+    }
+
+    /**
+     * @param bool $isUpdate
+     * @return array
+     */
+    protected function createDiff(bool $isUpdate)
+    {
+        return $this->diffService->diff($isUpdate);
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param array $diff
+     *
+     * TODO: Temporaty solution
+     */
+    protected function showDiff(OutputInterface $output, array $diff): void
+    {
+        if(!count($diff)) {
+            $output->writeln('<bg=green;options=bold>No new changes</>');
+
+            return;
+        }
+
         $output->writeln('<bg=green;options=bold>DIFF CHANGES</>');
-        dump($diffArray);
+
+        foreach ($diff as $classname => $attributesDiff) {
+            $output->writeln(sprintf('<fg=black;bg=cyan>%s</>', $classname));
+            foreach ($attributesDiff['attributes'] as $attribute => $attrData) {
+                $isNew = $attrData['is_new'];
+                $output->writeln(sprintf('<options=bold>    %s</> (%s)', $attribute,
+                    ($isNew ? 'Append': 'Update')
+                ));
+                unset($attrData['is_new']);
+
+                foreach ($attrData as $propName => $propDiff) {
+                    $valNew = var_export($propDiff['new'], 1);
+                    if($isNew) {
+                        $output->writeln(
+                            sprintf('<options=bold>        %s: </> %s',
+                                $propName, $valNew)
+                        );
+
+                        continue;
+                    }
+
+                    $valOld = var_export($propDiff['old'], 1);
+
+                    $output->writeln(
+                        sprintf('<options=bold>        %s: </> %s => %s',
+                            $propName, $valOld, $valNew)
+                    );
+                }
+
+            }
+
+        }
+
     }
 }

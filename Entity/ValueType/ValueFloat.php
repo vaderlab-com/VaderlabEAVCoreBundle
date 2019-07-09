@@ -16,6 +16,7 @@ use Vaderlab\EAV\Core\Entity\ValueTypeHasDefaultInterface;
 /**
  * Class ValueFoat
  * @package Vaderlab\EAV\Core\Entity\ValueType
+ * @ORM\Table(name="vaderlab_eav_value_float")
  * @ORM\Entity()
  * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
  */
