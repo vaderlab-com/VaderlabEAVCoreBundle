@@ -16,10 +16,9 @@ use Vaderlab\EAV\Core\Model\AttributeInterface;
 
 
 /**
- * @ORM\Table(name="vaderlab_eav_attribute")
  * @ORM\Entity(repositoryClass="Vaderlab\EAV\Core\Repository\AttributeRepository")
  * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
- * @ORM\Table(name="Attribute",
+ * @ORM\Table(name="vaderlab_eav_attribute",
  *     uniqueConstraints={
  *      @ORM\UniqueConstraint(name="attribute", columns={"name", "schema_id"})
  * })
@@ -100,11 +99,10 @@ class Attribute implements AttributeInterface
      * @var ArrayCollection<UniqueIndex>
      * @ORM\OneToMany(
      *     targetEntity="Vaderlab\EAV\Core\Entity\UniqueIndex",
-     *     mappedBy="entity",
+     *     mappedBy="attribute",
      *     fetch="EXTRA_LAZY",
      *     orphanRemoval=false
      * )
-     *  @ORM\JoinColumn(name="id", referencedColumnName="attribute_id", nullable=false, onDelete="CASCADE")
      */
     private $uniqueIndexes;
 

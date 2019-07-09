@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="vaderlab_eav_unique_idx")
  * @ORM\Entity()
  * @ORM\Cache(usage="NONSTRICT_READ_WRITE", region="eav")
- * @ORM\HasLifecycleCallbacks()
  */
 class UniqueIndex
 {
@@ -25,6 +24,7 @@ class UniqueIndex
      * @var Entity
      * @ORM\ManyToOne(targetEntity="Vaderlab\EAV\Core\Entity\Entity", fetch="LAZY", inversedBy="uniqueIndexes")
      * @ORM\JoinColumn(name="entity_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     private $entity;
 
@@ -32,7 +32,7 @@ class UniqueIndex
      * @var Attribute
      * @ORM\ManyToOne(targetEntity="Vaderlab\EAV\Core\Entity\Attribute", fetch="LAZY", inversedBy="uniqueIndexes", cascade={"persist", "merge"})
      * @ORM\JoinColumn(name="attribute_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-     *
+     * @ORM\Cache("NONSTRICT_READ_WRITE", region="eav")
      */
     private $attribute;
 
