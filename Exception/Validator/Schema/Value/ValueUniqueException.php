@@ -18,7 +18,7 @@ class ValueUniqueException extends InvalidValueException
         $code = 0,
         Throwable $previous = null
     ) {
-        $message = 'Attribute "%s" value "%s" already exists. Schema [%d] "%s".';
+        $message = 'Attribute "%s" value "%s" duplicated. Schema [%d] "%s".';
         $message = sprintf(
             $message,
             $attribute->getName(),

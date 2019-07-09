@@ -31,6 +31,11 @@
             <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.schema_compare_processor"/>
         </service>
 
+        <service id="Vaderlab\EAV\Core\Event\Value\ValueUniqueSubscriber">
+            <tag name="doctrine.event_subscriber" connection="default"/>
+            <argument type="service" id="Vaderlab\EAV\Core\ORM\Value\UniqueIndexGenerator" />
+        </service>
+
         <service id="Vaderlab\EAV\Core\Event\Entity\ValueValidationSubscriber">
             <tag name="doctrine.event_subscriber" connection="default"/>
             <argument type="service" id="Vaderlab\EAV\Core\Validator\Schema\Value\EntityValueValidatorService" />

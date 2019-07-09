@@ -42,7 +42,6 @@ class EntityValueValidatorService implements EntityValueValidatorServiceInterfac
         $attribute = $value->getAttribute();
 
         $this->validateIsNullable($value, $attribute);
-        $this->validateIsUnique($value, $attribute);
     }
 
     /**
@@ -54,35 +53,6 @@ class EntityValueValidatorService implements EntityValueValidatorServiceInterfac
     {
         if($valueObj->getValue() === null && !$attribute->isNullable()) {
             throw new ValueCanNotBeNullException($attribute->getName());
-        }
-    }
-
-    /**
-     * @param AbstractValue $valueObj
-     * @param Attribute $attribute
-     * @throws ValueUniqueException
-     */
-    public function validateIsUnique(AbstractValue $valueObj, Attribute $attribute): void
-    {
-        if(!$attribute->isUnique()) {
-            return;
-        }
-
-        $value          = $valueObj->getValue();
-        $schema         = $attribute->getSchema();
-        $valueClass     = get_class($valueObj);
-        $repository     = $this->doctrine->getRepository($valueClass);
-        $uniqueValue    = $repository->findOneBy([
-            'attribute'     => $attribute,
-            'value'         => $value
-        ]);
-
-        if(!$uniqueValue) {
-            return;
-        }
-
-        if($uniqueValue->getId() !== $valueObj->getId()) {
-            throw new ValueUniqueException($schema, $attribute, $valueObj);
         }
     }
 }

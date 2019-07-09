@@ -48,5 +48,25 @@
             <tag name="doctrine.event_listener" event="postFlush" priority="0"/>
         </service>
 
+        <service id="Vaderlab\EAV\Core\ORM\Value\UniqueIndexGenerator" />
+
+        <service id="Vaderlab\EAV\Core\ORM\Value\UniqueIndexManager">
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="Vaderlab\EAV\Core\ORM\Value\UniqueIndexGenerator" />
+        </service>
+
+        <service id="Vaderlab\EAV\Core\Event\Exception\UniqueValueExceptionListener">
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="Vaderlab\EAV\Core\ORM\PersistentEntityCollection" />
+            <tag name="kernel.event_listener" event="kernel.exception"/>
+        </service>
+
+        <service id="Vaderlab\EAV\Core\Event\Attribute\CreateUniqueAttributeSubscriber">
+            <argument type="service" id="vaderlab.eav.core.schema.diff.comparison.attribute_compare_processor"/>
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
+            <argument type="service" id="Vaderlab\EAV\Core\ORM\Value\UniqueIndexManager"/>
+            <tag name="doctrine.event_subscriber" connection="default"/>
+        </service>
+
     </services>
 </container>

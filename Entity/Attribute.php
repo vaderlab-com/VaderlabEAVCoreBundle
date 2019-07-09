@@ -9,6 +9,7 @@
 namespace Vaderlab\EAV\Core\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vaderlab\EAV\Core\Model\AttributeInterface;
@@ -96,6 +97,18 @@ class Attribute implements AttributeInterface
     private $schema;
 
     /**
+     * @var ArrayCollection<UniqueIndex>
+     * @ORM\OneToMany(
+     *     targetEntity="Vaderlab\EAV\Core\Entity\UniqueIndex",
+     *     mappedBy="entity",
+     *     fetch="EXTRA_LAZY",
+     *     orphanRemoval=false
+     * )
+     *  @ORM\JoinColumn(name="id", referencedColumnName="attribute_id", nullable=false, onDelete="CASCADE")
+     */
+    private $uniqueIndexes;
+
+    /**
      * @var String
      * @ORM\Column( name="description", type="text", nullable=true )
      */
@@ -106,6 +119,14 @@ class Attribute implements AttributeInterface
      * @ORM\Column( name="default_value", type="string", length=256, nullable=true)
      */
     private $defaultValue;
+
+    /**
+     * Attribute constructor.
+     */
+    public function __construct()
+    {
+        $this->uniqueIndexes = new ArrayCollection();
+    }
 
     /**
      * @return string|null

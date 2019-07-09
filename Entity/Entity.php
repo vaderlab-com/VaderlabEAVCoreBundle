@@ -76,9 +76,10 @@ class Entity implements EAVEntityInterface
      * @ORM\OneToMany(
      *     targetEntity="Vaderlab\EAV\Core\Entity\UniqueIndex",
      *     mappedBy="entity",
-     *     fetch="EXTRA_LAZY"
+     *     fetch="EXTRA_LAZY",
+     *     orphanRemoval=false
      * )
-     *  @ORM\JoinColumn(name="id", referencedColumnName="entity_id", nullable=false, onDelete="CASCADE")
+     * ORM\JoinColumn(name="id", referencedColumnName="entity_id", nullable=false, onDelete="CASCADE")
      */
     private $uniqueIndexes;
 
@@ -161,9 +162,9 @@ class Entity implements EAVEntityInterface
     }
 
     /**
-     * @return ArrayCollection<UniqueIndex>
+     * @return Collection<UniqueIndex>
      */
-    public function getUniqueIndexes(): ArrayCollection
+    public function getUniqueIndexes(): Collection
     {
         return $this->uniqueIndexes;
     }
